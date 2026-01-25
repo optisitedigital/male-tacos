@@ -59,8 +59,8 @@
                 <input type="text" id="classe" placeholder="Ta Classe">
                 
                 <p class="label-info">Jour de récupération :</p>
-                <div style="display: flex; gap: 5px; margin-bottom: 10px;">
-                    <select id="jour-semaine" style="flex: 2; padding: 10px; border-radius: 8px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px;">
+                    <select id="jour-semaine" style="padding: 10px; border-radius: 8px;">
                         <option value="Lundi">Lundi</option>
                         <option value="Mardi">Mardi</option>
                         <option value="Mercredi">Mercredi</option>
@@ -68,7 +68,21 @@
                         <option value="Vendredi">Vendredi</option>
                         <option value="Samedi">Samedi</option>
                     </select>
-                    <input type="number" id="jour-date" placeholder="Date (ex: 30)" style="flex: 1; padding: 10px; border-radius: 8px;">
+                    <input type="number" id="jour-date" placeholder="Jour (ex: 12)" style="padding: 10px; border-radius: 8px;">
+                    <select id="mois" style="padding: 10px; border-radius: 8px;">
+                        <option value="Janvier">Janv</option>
+                        <option value="Février">Févr</option>
+                        <option value="Mars">Mars</option>
+                        <option value="Avril">Avril</option>
+                        <option value="Mai">Mai</option>
+                        <option value="Juin">Juin</option>
+                        <option value="Juillet">Juil</option>
+                        <option value="Août">Août</option>
+                        <option value="Septembre">Sept</option>
+                        <option value="Octobre">Oct</option>
+                        <option value="Novembre">Nov</option>
+                        <option value="Décembre">Déc</option>
+                    </select>
                 </div>
 
                 <p class="label-info">Heure de retrait :</p>
@@ -166,12 +180,14 @@
             let message = "";
             let commande = "";
             const numero = "243858679024";
+            const anneeActuelle = new Date().getFullYear(); // Récupère 2026, 2027 automatiquement
 
             if (mode === 'retrait') {
                 const nom = document.getElementById('nom-eleve').value;
                 const classe = document.getElementById('classe').value;
                 const jourS = document.getElementById('jour-semaine').value;
                 const jourD = document.getElementById('jour-date').value;
+                const mois = document.getElementById('mois').value;
                 const heure = document.getElementById('h-retrait').value;
                 
                 const qS = document.getElementById('q-std').value;
@@ -186,7 +202,8 @@
                 if(qSp > 0) commande += `%0A- ${qSp} Spaghetti`;
                 if(qB > 0) commande += `%0A- ${qB} Burger`;
 
-                message = `*INSTITUT BOBOKOLI 🏫*%0A👤 ${nom}%0A👥 Classe: ${classe}%0A📅 Date: ${jourS} ${jourD}%0A⏰ Heure: ${heure}%0A%0A*COMMANDE:*${commande}`;
+                // Format final : Lundi 12 Janvier 2026
+                message = `*INSTITUT BOBOKOLI 🏫*%0A👤 ${nom}%0A👥 Classe: ${classe}%0A📅 Date: ${jourS} ${jourD} ${mois} ${anneeActuelle}%0A⏰ Heure: ${heure}%0A%0A*COMMANDE:*${commande}`;
             } 
             else {
                 const nom = document.getElementById('nom-livraison').value;
