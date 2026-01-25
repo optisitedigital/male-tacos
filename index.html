@@ -60,13 +60,20 @@
             <input type="text" id="nom" placeholder="Nom et Prénom" required>
             <input type="text" id="classe" placeholder="Ta Classe" required>
             
-            <p class="label-info">Quand viens-tu récupérer ?</p>
+            <p class="label-info">Jour de récupération :</p>
+            <input type="date" id="date-recup" required>
+
+            <p class="label-info">Heure précise de retrait :</p>
             <select id="creneau">
                 <option value="06h00 - 06h15">Matin (06h00 à 06h15)</option>
                 <option value="07h10 - 07h15">Pré-Récré (07h10 à 07h15)</option>
                 <option value="10h00 - 10h13">Récréation (10h00 à 10h13)</option>
                 <option value="12h30 (Sortie)">Sortie (12h30)</option>
             </select>
+
+            <div class="warning-box">
+                ⚠️ **Attention :** Si vous ne venez pas récupérer votre commande à l'heure dite, **Malé Tacos** est autorisé à la revendre.
+            </div>
         </section>
 
         <button class="btn-whatsapp" onclick="envoyerWhatsApp()">📲 Commander maintenant</button>
@@ -76,6 +83,7 @@
         function envoyerWhatsApp() {
             const nom = document.getElementById('nom').value;
             const classe = document.getElementById('classe').value;
+            const dateRecup = document.getElementById('date-recup').value;
             const creneau = document.getElementById('creneau').value;
             
             const s = document.getElementById('qty-standard').value;
@@ -83,8 +91,8 @@
             const sp = document.getElementById('qty-spag').value;
             const b = document.getElementById('qty-burger').value;
             
-            if(!nom || !classe) {
-                alert("STP, entre ton nom et ta classe !");
+            if(!nom || !classe || !dateRecup) {
+                alert("STP, remplis ton nom, ta classe et la date !");
                 return;
             }
 
@@ -99,7 +107,7 @@
                 return;
             }
 
-            const texte = `Salut Malé Tacos ! 🌮%0A%0A*Nouvelle commande de :*%0A${nom} (${classe})%0A%0A*Détails :*${commande}%0A%0A*Récupération prévue :*%0A${creneau}`;
+            const texte = `Salut Malé Tacos ! 🌮%0A%0A*COMMANDE DE :*%0A${nom} (${classe})%0A%0A*DATE :* ${dateRecup}%0A*HEURE :* ${creneau}%0A%0A*DÉTAILS :*${commande}%0A%0A---%0A_J'accepte que Malé Tacos revende ma commande en cas de retard._`;
             
             const numero = "243858679024"; 
             window.open(`https://wa.me/${numero}?text=${texte}`, '_blank');
