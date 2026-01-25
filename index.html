@@ -11,7 +11,7 @@
     <header>
         <img src="logo-male.png" alt="Logo Malé Tacos" class="logo-header">
         <h1>Malé Tacos</h1>
-        <p>Exclusivité à l'**Institut Bobokoli** ! 🌮</p>
+        <p>Exclusivité à l'Institut Bobokoli! 🌮</p>
     </header>
 
     <main>
@@ -71,10 +71,12 @@
 
         <hr class="separator">
 
-        <section id="menu-livraison">
+       <section id="menu-livraison">
             <h2 class="title-section">🛵 OPTION LIVRAISON 🛵</h2>
-            <div class="zone-box">
-                📍 **Dispo :** UPN, Cité Verte, Macampagne, Kitambo Magasin.
+            
+            <div class="zone-box" style="background: #fff3e0; border-left: 5px solid #ff9800; padding: 15px; margin: 10px; border-radius: 8px; font-size: 0.9em; color: #e65100;">
+                <strong>📍 Zones de livraison disponibles :</strong><br>
+                UPN • Cité Verte • Macampagne • Kitambo Magasin
             </div>
             
             <div class="item">
@@ -95,16 +97,39 @@
                 </div>
             </div>
 
-           <div id="fields-livraison">
+            <div style="background: white; padding: 15px; margin: 10px; border-radius: 12px; border: 1px solid #ddd;">
+                <h4 style="margin-top:0; color: #c41e16;">🍯 Choix des Sauces (Max 2)</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.85em;">
+                    <label><input type="checkbox" class="sauce" value="Barbeche"> Barbeche</label>
+                    <label><input type="checkbox" class="sauce" value="Algérienne"> Algérienne</label>
+                    <label><input type="checkbox" class="sauce" value="Mayonnaise"> Mayonnaise</label>
+                    <label><input type="checkbox" class="sauce" value="Ketchup"> Ketchup</label>
+                    <label><input type="checkbox" class="sauce" value="Samouraï"> Samouraï</label>
+                    <label><input type="checkbox" class="sauce" value="Piment"> Piment</label>
+                </div>
+
+                <h4 style="margin-bottom:5px; color: #c41e16;">🧀 Suppléments (+4.000 FC)</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.85em;">
+                    <label><input type="checkbox" class="supp" value="Cheddar"> Cheddar</label>
+                    <label><input type="checkbox" class="supp" value="Oeuf"> Oeuf</label>
+                    <label><input type="checkbox" class="supp" value="Salami"> Salami</label>
+                    <label><input type="checkbox" class="supp" value="Jambon"> Jambon</label>
+                    <label><input type="checkbox" class="supp" value="Vache qui rit"> Vache qui rit</label>
+                    <label><input type="checkbox" class="supp" value="Gouda"> Gouda</label>
+                    <label><input type="checkbox" class="supp" value="Mozarella"> Mozarella</label>
+                    <label><input type="checkbox" class="supp" value="Lardon"> Lardon</label>
+                </div>
+            </div>
+
+            <div id="fields-livraison">
                 <input type="text" id="nom-livraison" placeholder="Nom pour la livraison">
                 <input type="text" id="commune" placeholder="Commune (ex: Ngaliema)">
                 <input type="text" id="avenue" placeholder="Quartier et Avenue">
                 <input type="text" id="num-maison" placeholder="N° Maison / Réf">
                 
                 <p style="color: red; font-weight: bold; text-align: center; margin-top: 15px; font-size: 0.9em;">
-                    📍 LIVRAISON DISPONIBLE SUR : UPN, CITE VERTE, MACAMPAGNE, KITAMBO MAGASIN(active votre localisation une fois sur whatsapp)
+                    📍 LIVRAISON DISPONIBLE SUR : UPN, CITE VERTE, MACAMPAGNE, KITAMBO MAGASIN
                 </p>
-
                 <p class="loc-alert">🚀 Livraison directe ! Frais : 6.000 FC</p>
                 <button class="btn-whatsapp" style="background: #007bff;" onclick="envoyer('livraison')">🚀 Commander en Livraison</button>
             </div>
