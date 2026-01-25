@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Malé Tacos - Bobokoli</title>
+    <title>Malé Tacos - Commande</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,106 +11,125 @@
     <header>
         <img src="logo-male.png" alt="Logo Malé Tacos" class="logo-header">
         <h1>Malé Tacos</h1>
-        <p>Grande première à Bobokoli ! 🌮</p>
+        <div class="mode-selector">
+            <button id="btn-retrait" class="tab-btn active" onclick="switchMode('retrait')">Retrait École</button>
+            <button id="btn-livraison" class="tab-btn" onclick="switchMode('livraison')">Livraison Directe</button>
+        </div>
     </header>
 
     <main>
-        <section id="menu">
+        <section id="menu-retrait">
             <h2 class="title-section">🔥 TARIFS ÉLÈVES 🔥</h2>
-
             <div class="item">
-                <img src="standard.jpg" alt="Tacos standard">
                 <div class="info">
-                    <h3>Tacos Standard</h3>
-                    <p class="price">5 000 FC</p>
-                    <input type="number" id="qty-standard" value="0" min="0" class="qty-input">
+                    <h3>Tacos Standard (5.000 FC)</h3>
+                    <input type="number" id="q-std" value="0" min="0" class="qty-input">
+                </div>
+            </div>
+            <div class="item">
+                <div class="info">
+                    <h3>Cannibal Viande (4.000 FC)</h3>
+                    <input type="number" id="q-can" value="0" min="0" class="qty-input">
+                </div>
+            </div>
+        </section>
+
+        <section id="menu-livraison" style="display:none;">
+            <h2 class="title-section">🛵 MENU LIVRAISON 🛵</h2>
+            <div class="zone-box">
+                📍 **Livraison :** UPN, Cité Verte, Macampagne, Kitambo Magasin.
+            </div>
+            
+            <div class="item">
+                <img src="tacos-viande.jpg" alt="Tacos Viande">
+                <div class="info">
+                    <h3>Tacos Viande Hachée</h3>
+                    <label class="check-container">
+                        <input type="checkbox" id="v-l"> Taille L - **12.000 FC**
+                    </label>
+                    <label class="check-container">
+                        <input type="checkbox" id="v-xl"> Taille XL - **24.000 FC**
+                    </label>
                 </div>
             </div>
 
             <div class="item">
-                <img src="cannibal.jpg" alt="Cannibal Burger">
+                <img src="tacos-poulet.jpg" alt="Tacos Poulet">
                 <div class="info">
-                    <h3>Cannibal (Viande hachée)</h3>
-                    <p class="price">4 000 FC</p>
-                    <input type="number" id="qty-cannibal" value="0" min="0" class="qty-input">
-                </div>
-            </div>
-
-            <div class="item">
-                <img src="spaghetti.jpg" alt="Spaghetti">
-                <div class="info">
-                    <h3>Spaghetti Bolognaise</h3>
-                    <p class="price">3 000 FC</p>
-                    <input type="number" id="qty-spag" value="0" min="0" class="qty-input">
-                </div>
-            </div>
-
-            <div class="item">
-                <img src="burger.jpg" alt="Burger">
-                <div class="info">
-                    <h3>Burger</h3>
-                    <p class="price">3 000 FC</p>
-                    <input type="number" id="qty-burger" value="0" min="0" class="qty-input">
+                    <h3>Tacos au Poulet</h3>
+                    <label class="check-container">
+                        <input type="checkbox" id="p-l"> Taille L - **10.000 FC**
+                    </label>
+                    <label class="check-container">
+                        <input type="checkbox" id="p-xl"> Taille XL - **20.000 FC**
+                    </label>
                 </div>
             </div>
         </section>
 
         <section id="infos-client">
-            <h2>Tes Informations</h2>
             <input type="text" id="nom" placeholder="Nom et Prénom" required>
-            <input type="text" id="classe" placeholder="Ta Classe" required>
-            
-            <p class="label-info">Jour de récupération :</p>
-            <input type="date" id="date-recup" required>
 
-            <p class="label-info">Heure précise de retrait :</p>
-            <select id="creneau">
-                <option value="06h00 - 06h15">Matin (06h00 à 06h15)</option>
-                <option value="07h10 - 07h15">Pré-Récré (07h10 à 07h15)</option>
-                <option value="10h00 - 10h13">Récréation (10h00 à 10h13)</option>
-                <option value="12h30 (Sortie)">Sortie (12h30)</option>
-            </select>
+            <div id="fields-retrait">
+                <input type="text" id="classe" placeholder="Ta Classe">
+                <p class="label-info">Jour et Heure de retrait :</p>
+                <input type="date" id="date-recup">
+                <select id="h-retrait">
+                    <option value="Récréation (10h)">Récréation (10h00)</option>
+                    <option value="Sortie (12h30)">Sortie (12h30)</option>
+                </select>
+            </div>
 
-            <div class="warning-box">
-                ⚠️ **Attention :** Si vous ne venez pas récupérer votre commande à l'heure dite, **Malé Tacos** est autorisé à la revendre.
+            <div id="fields-livraison" style="display:none;">
+                <input type="text" id="commune" placeholder="Commune">
+                <input type="text" id="avenue" placeholder="Quartier et Avenue">
+                <input type="text" id="num-maison" placeholder="N° Maison et Référence">
+                <p class="loc-alert">🚀 Frais de livraison : 6.000 FC</p>
             </div>
         </section>
 
-        <button class="btn-whatsapp" onclick="envoyerWhatsApp()">📲 Commander maintenant</button>
+        <button class="btn-whatsapp" onclick="envoyer()">📲 Commander via WhatsApp</button>
     </main>
 
     <script>
-        function envoyerWhatsApp() {
+        let mode = "retrait";
+
+        function switchMode(m) {
+            mode = m;
+            document.getElementById('btn-retrait').className = (m === 'retrait' ? 'tab-btn active' : 'tab-btn');
+            document.getElementById('btn-livraison').className = (m === 'livraison' ? 'tab-btn active' : 'tab-btn');
+            document.getElementById('menu-retrait').style.display = (m === 'retrait' ? 'block' : 'none');
+            document.getElementById('menu-livraison').style.display = (m === 'livraison' ? 'block' : 'none');
+            document.getElementById('fields-retrait').style.display = (m === 'retrait' ? 'block' : 'none');
+            document.getElementById('fields-livraison').style.display = (m === 'livraison' ? 'block' : 'none');
+        }
+
+        function envoyer() {
             const nom = document.getElementById('nom').value;
-            const classe = document.getElementById('classe').value;
-            const dateRecup = document.getElementById('date-recup').value;
-            const creneau = document.getElementById('creneau').value;
-            
-            const s = document.getElementById('qty-standard').value;
-            const c = document.getElementById('qty-cannibal').value;
-            const sp = document.getElementById('qty-spag').value;
-            const b = document.getElementById('qty-burger').value;
-            
-            if(!nom || !classe || !dateRecup) {
-                alert("STP, remplis ton nom, ta classe et la date !");
-                return;
-            }
+            if(!nom) return alert("Mets ton nom !");
 
             let commande = "";
-            if(s > 0) commande += `%0A- *${s}* Tacos Standard`;
-            if(c > 0) commande += `%0A- *${c}* Cannibal (Viande)`;
-            if(sp > 0) commande += `%0A- *${sp}* Spaghetti`;
-            if(b > 0) commande += `%0A- *${b}* Burger`;
+            let entete = "";
 
-            if(commande === "") {
-                alert("Choisis au moins un article !");
-                return;
+            if(mode === "retrait") {
+                const qS = document.getElementById('q-std').value;
+                const qC = document.getElementById('q-can').value;
+                if(qS > 0) commande += `%0A- ${qS} Tacos Standard`;
+                if(qC > 0) commande += `%0A- ${qC} Cannibal`;
+                entete = `*RETRAIT ECOLE*%0A👤 Nom: ${nom}%0A🏫 Classe: ${document.getElementById('classe').value}%0A📅 Date: ${document.getElementById('date-recup').value}%0A⏰ Heure: ${document.getElementById('h-retrait').value}`;
+            } else {
+                if(document.getElementById('v-l').checked) commande += "%0A- Tacos Viande L (12.000 FC)";
+                if(document.getElementById('v-xl').checked) commande += "%0A- Tacos Viande XL (24.000 FC)";
+                if(document.getElementById('p-l').checked) commande += "%0A- Tacos Poulet L (10.000 FC)";
+                if(document.getElementById('p-xl').checked) commande += "%0A- Tacos Poulet XL (20.000 FC)";
+                
+                entete = `*LIVRAISON DIRECTE 🚀*%0A👤 Nom: ${nom}%0A📍 Commune: ${document.getElementById('commune').value}%0A📍 Quartier/Av: ${document.getElementById('avenue').value}%0A🏠 N°: ${document.getElementById('num-maison').value}%0A📍 _Envoi localisation après ce message._`;
             }
 
-            const texte = `Salut Malé Tacos ! 🌮%0A%0A*COMMANDE DE :*%0A${nom} (${classe})%0A%0A*DATE :* ${dateRecup}%0A*HEURE :* ${creneau}%0A%0A*DÉTAILS :*${commande}%0A%0A---%0A_J'accepte que Malé Tacos revende ma commande en cas de retard._`;
+            if(commande === "") return alert("Coche au moins un Tacos !");
             
-            const numero = "243858679024"; 
-            window.open(`https://wa.me/${numero}?text=${texte}`, '_blank');
+            const texte = `Salut Malé Tacos ! 🌮%0A%0A${entete}%0A%0A*COMMANDE :*${commande}`;
+            window.open(`https://wa.me/243858679024?text=${texte}`, '_blank');
         }
     </script>
 </body>
