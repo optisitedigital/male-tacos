@@ -1,0 +1,67 @@
+:root {
+    --rouge-male: #c41e16; /* Le rouge de ton logo */
+    --gris-fond: #f4f4f4;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--gris-fond);
+    margin: 0;
+    color: #333;
+}
+
+header {
+    background-color: white;
+    text-align: center;
+    padding: 20px;
+    border-bottom: 5px solid var(--rouge-male);
+}
+
+.logo-header { width: 120px; border-radius: 50%; }
+
+.title-section {
+    background-color: var(--rouge-male);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.item {
+    display: flex;
+    background: white;
+    margin: 15px 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    align-items: center;
+}
+
+.item img { width: 80px; height: 80px; object-fit: cover; border-radius: 10px 0 0 10px; }
+
+.info { padding: 10px; flex-grow: 1; }
+
+.price { font-weight: bold; color: var(--rouge-male); margin: 5px 0; }
+
+.qty-input { width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; }
+
+.btn-whatsapp {
+    width: 100%;
+    background-color: #25d366;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+input[type="text"], select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
