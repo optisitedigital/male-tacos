@@ -62,10 +62,10 @@
             
             <p class="label-info">Quand viens-tu récupérer ?</p>
             <select id="creneau">
-                <option value="Avant les cours (06h30-07h10)">06h30 - 07h10</option>
-                <option value="Pré-Récré (07h10-07h30)">07h10 - 07h30</option>
-                <option value="Récréation (10h15)">Récréation (10h15)</option>
-                <option value="Sortie (12h30)">Sortie (12h30)</option>
+                <option value="06h00 - 06h15">Matin (06h00 à 06h15)</option>
+                <option value="07h10 - 07h15">Pré-Récré (07h10 à 07h15)</option>
+                <option value="10h00 - 10h13">Récréation (10h00 à 10h13)</option>
+                <option value="12h30 (Sortie)">Sortie (12h30)</option>
             </select>
         </section>
 
@@ -78,7 +78,6 @@
             const classe = document.getElementById('classe').value;
             const creneau = document.getElementById('creneau').value;
             
-            // Quantités
             const s = document.getElementById('qty-standard').value;
             const c = document.getElementById('qty-cannibal').value;
             const sp = document.getElementById('qty-spag').value;
@@ -90,19 +89,18 @@
             }
 
             let commande = "";
-            if(s > 0) commande += `- ${s} Tacos Standard %0A`;
-            if(c > 0) commande += `- ${c} Cannibal %0A`;
-            if(sp > 0) commande += `- ${sp} Spaghetti %0A`;
-            if(b > 0) commande += `- ${b} Burger %0A`;
+            if(s > 0) commande += `%0A- *${s}* Tacos Standard`;
+            if(c > 0) commande += `%0A- *${c}* Cannibal (Viande)`;
+            if(sp > 0) commande += `%0A- *${sp}* Spaghetti`;
+            if(b > 0) commande += `%0A- *${b}* Burger`;
 
             if(commande === "") {
                 alert("Choisis au moins un article !");
                 return;
             }
 
-            const texte = `Salut Malé Tacos ! 🌮 %0A%0A*Nouvelle commande de :* ${nom} (${classe})%0A%0A*Détails :*%0A${commande}%0A*Récupération prévue :* ${creneau}`;
+            const texte = `Salut Malé Tacos ! 🌮%0A%0A*Nouvelle commande de :*%0A${nom} (${classe})%0A%0A*Détails :*${commande}%0A%0A*Récupération prévue :*%0A${creneau}`;
             
-            // Ton numéro d'après l'image
             const numero = "243858679024"; 
             window.open(`https://wa.me/${numero}?text=${texte}`, '_blank');
         }
