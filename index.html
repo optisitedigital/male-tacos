@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malé Tacos - Bobokoli</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <img src="logo-male.png" alt="Logo Malé Tacos" class="logo-header">
+        <h1>Malé Tacos</h1>
+        <p>Grande première à Bobokoli ! 🌮</p>
+    </header>
+
+    <main>
+        <section id="menu">
+            <h2 class="title-section">🔥 TARIFS ÉLÈVES 🔥</h2>
+
+            <div class="item">
+                <img src="standard.jpg" alt="Tacos standard">
+                <div class="info">
+                    <h3>Tacos Standard</h3>
+                    <p class="price">5 000 FC</p>
+                    <input type="number" id="qty-standard" value="0" min="0" class="qty-input">
+                </div>
+            </div>
+
+            <div class="item">
+                <img src="cannibal.jpg" alt="Cannibal Burger">
+                <div class="info">
+                    <h3>Cannibal (Viande hachée)</h3>
+                    <p class="price">4 000 FC</p>
+                    <input type="number" id="qty-cannibal" value="0" min="0" class="qty-input">
+                </div>
+            </div>
+
+            <div class="item">
+                <img src="spaghetti.jpg" alt="Spaghetti">
+                <div class="info">
+                    <h3>Spaghetti Bolognaise</h3>
+                    <p class="price">3 000 FC</p>
+                    <input type="number" id="qty-spag" value="0" min="0" class="qty-input">
+                </div>
+            </div>
+
+            <div class="item">
+                <img src="burger.jpg" alt="Burger">
+                <div class="info">
+                    <h3>Burger</h3>
+                    <p class="price">3 000 FC</p>
+                    <input type="number" id="qty-burger" value="0" min="0" class="qty-input">
+                </div>
+            </div>
+        </section>
+
+        <section id="infos-client">
+            <h2>Tes Informations</h2>
+            <input type="text" id="nom" placeholder="Nom et Prénom" required>
+            <input type="text" id="classe" placeholder="Ta Classe" required>
+            
+            <p class="label-info">Quand viens-tu récupérer ?</p>
+            <select id="creneau">
+                <option value="Avant les cours (06h30-07h10)">06h30 - 07h10</option>
+                <option value="Pré-Récré (07h10-07h30)">07h10 - 07h30</option>
+                <option value="Récréation (10h15)">Récréation (10h15)</option>
+                <option value="Sortie (12h30)">Sortie (12h30)</option>
+            </select>
+        </section>
+
+        <button class="btn-whatsapp" onclick="envoyerWhatsApp()">📲 Commander maintenant</button>
+    </main>
+
+    <script>
+        function envoyerWhatsApp() {
+            const nom = document.getElementById('nom').value;
+            const classe = document.getElementById('classe').value;
+            const creneau = document.getElementById('creneau').value;
+            
+            // Quantités
+            const s = document.getElementById('qty-standard').value;
+            const c = document.getElementById('qty-cannibal').value;
+            const sp = document.getElementById('qty-spag').value;
+            const b = document.getElementById('qty-burger').value;
+            
+            if(!nom || !classe) {
+                alert("STP, entre ton nom et ta classe !");
+                return;
+            }
+
+            let commande = "";
+            if(s > 0) commande += `- ${s} Tacos Standard %0A`;
+            if(c > 0) commande += `- ${c} Cannibal %0A`;
+            if(sp > 0) commande += `- ${sp} Spaghetti %0A`;
+            if(b > 0) commande += `- ${b} Burger %0A`;
+
+            if(commande === "") {
+                alert("Choisis au moins un article !");
+                return;
+            }
+
+            const texte = `Salut Malé Tacos ! 🌮 %0A%0A*Nouvelle commande de :* ${nom} (${classe})%0A%0A*Détails :*%0A${commande}%0A*Récupération prévue :* ${creneau}`;
+            
+            // Ton numéro d'après l'image
+            const numero = "243858679024"; 
+            window.open(`https://wa.me/${numero}?text=${texte}`, '_blank');
+        }
+    </script>
+</body>
+</html>
