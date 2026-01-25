@@ -1,67 +1,91 @@
 :root {
-    --rouge-male: #c41e16; /* Le rouge de ton logo */
-    --gris-fond: #f4f4f4;
+    --rouge-male: #c41e16;
 }
 
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: var(--gris-fond);
-    margin: 0;
-    color: #333;
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    margin: 0; 
+    padding-bottom: 50px;
+    /* L'image de fond se configure ici */
+    background-image: url('fond.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
-header {
-    background-color: white;
-    text-align: center;
-    padding: 20px;
-    border-bottom: 5px solid var(--rouge-male);
+header { 
+    background: rgba(255, 255, 255, 0.9); /* Fond blanc semi-transparent */
+    text-align: center; 
+    padding: 20px; 
+    border-bottom: 5px solid var(--rouge-male); 
 }
 
-.logo-header { width: 120px; border-radius: 50%; }
+.logo-header { width: 120px; border-radius: 50%; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 
-.title-section {
-    background-color: var(--rouge-male);
-    color: white;
-    text-align: center;
-    padding: 10px;
-    border-radius: 5px;
+main { max-width: 500px; margin: auto; }
+
+.title-section { background: var(--rouge-male); color: white; text-align: center; padding: 10px; margin-top: 20px; }
+
+.item { 
+    display: flex; 
+    background: rgba(255, 255, 255, 0.95); 
+    margin: 15px 10px; 
+    border-radius: 12px; 
+    align-items: center; 
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-.item {
-    display: flex;
-    background: white;
-    margin: 15px 0;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    align-items: center;
+.item img { width: 100px; height: 100px; object-fit: cover; }
+
+.info { padding: 15px; flex-grow: 1; }
+
+.price { font-weight: bold; color: var(--rouge-male); font-size: 1.2em; margin: 5px 0; }
+
+.qty-input { width: 60px; padding: 8px; border: 2px solid #ddd; border-radius: 5px; text-align: center; font-size: 1em; }
+
+#infos-client { 
+    background: rgba(255, 255, 255, 0.95); 
+    padding: 20px; 
+    margin: 10px; 
+    border-radius: 12px; 
 }
 
-.item img { width: 80px; height: 80px; object-fit: cover; border-radius: 10px 0 0 10px; }
-
-.info { padding: 10px; flex-grow: 1; }
-
-.price { font-weight: bold; color: var(--rouge-male); margin: 5px 0; }
-
-.qty-input { width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 5px; }
-
-.btn-whatsapp {
-    width: 100%;
-    background-color: #25d366;
-    color: white;
-    font-size: 1.2rem;
-    font-weight: bold;
-    padding: 15px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-top: 20px;
+input[type="text"], input[type="date"], select { 
+    width: 100%; 
+    padding: 12px; 
+    margin: 10px 0; 
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    box-sizing: border-box; 
 }
 
-input[type="text"], select {
-    width: 100%;
+.label-info { font-weight: bold; margin-top: 15px; margin-bottom: 5px; color: #333; }
+
+.warning-box {
+    background: #fff3f3;
+    color: #c41e16;
     padding: 12px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: 2px dashed #c41e16;
+    margin-top: 20px;
+    font-size: 0.9em;
+    border-radius: 8px;
+    line-height: 1.4;
+}
+
+.btn-whatsapp { 
+    width: 90%; 
+    margin: 30px 5%; 
+    background: #25d366; 
+    color: white; 
+    border: none; 
+    padding: 18px; 
+    font-size: 1.2em; 
+    font-weight: bold; 
+    border-radius: 50px; 
+    cursor: pointer; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    position: sticky;
+    bottom: 20px;
 }
