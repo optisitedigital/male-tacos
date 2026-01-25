@@ -61,8 +61,8 @@
                 <input type="date" id="date-recup">
                 <p class="label-info">Heure de retrait :</p>
                 <select id="h-retrait">
-                    <option value="Matin (06h00)">Matin (06h00 à 06h15)</option>
-                    <option value="Récréation (10h)">Récréation (10h00)</option>
+                    <option value="Matin (07h10)">Matin (07h10 à 07h30)</option>
+                    <option value="Récréation (10h00)">Récréation (10h00 à 10h15)</option>
                     <option value="Sortie (12h30)">Sortie (12h30)</option>
                 </select>
                 <button class="btn-whatsapp" onclick="envoyer('retrait')">📲 Commander pour Bobokoli</button>
@@ -77,6 +77,10 @@
             <div class="zone-box" style="background: #fff3e0; border-left: 5px solid #ff9800; padding: 15px; margin: 10px; border-radius: 8px; font-size: 0.9em; color: #e65100;">
                 <strong>📍 Zones de livraison disponibles :</strong><br>
                 UPN • Cité Verte • Macampagne • Kitambo Magasin
+            </div>
+
+            <div style="background: #fdf2f2; padding: 10px; margin: 10px; border-radius: 8px; border: 1px dashed #c41e16; font-size: 0.85em; text-align: center;">
+                <strong>ℹ️ À SAVOIR :</strong> Nos tacos sont garnis de frites, de la sauce samouraï & fromage.
             </div>
             
             <div class="item">
@@ -108,7 +112,7 @@
                     <label><input type="checkbox" class="sauce" value="Piment"> Piment</label>
                 </div>
 
-                <h4 style="margin-bottom:5px; color: #c41e16;">🧀 Suppléments (+4.000 FC)</h4>
+                <h4 style="margin-bottom:5px; color: #c41e16; margin-top: 15px;">🧀 Suppléments (+4.000 FC)</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.85em;">
                     <label><input type="checkbox" class="supp" value="Cheddar"> Cheddar</label>
                     <label><input type="checkbox" class="supp" value="Oeuf"> Oeuf</label>
@@ -118,6 +122,7 @@
                     <label><input type="checkbox" class="supp" value="Gouda"> Gouda</label>
                     <label><input type="checkbox" class="supp" value="Mozarella"> Mozarella</label>
                     <label><input type="checkbox" class="supp" value="Lardon"> Lardon</label>
+                    <label><input type="checkbox" class="supp" value="Bacon"> Bacon</label>
                 </div>
             </div>
 
@@ -174,6 +179,16 @@
                 if(document.getElementById('v-xl').checked) commande += "%0A- Tacos Viande XL (24k)";
                 if(document.getElementById('p-l').checked) commande += "%0A- Tacos Poulet L (10k)";
                 if(document.getElementById('p-xl').checked) commande += "%0A- Tacos Poulet XL (20k)";
+
+                // Récupération Sauces
+                let sauces = [];
+                document.querySelectorAll('.sauce:checked').forEach(s => sauces.push(s.value));
+                if(sauces.length > 0) commande += `%0A🍯 *Sauces:* ${sauces.join(', ')}`;
+
+                // Récupération Suppléments
+                let supps = [];
+                document.querySelectorAll('.supp:checked').forEach(s => supps.push(s.value));
+                if(supps.length > 0) commande += `%0A🧀 *Suppléments:* ${supps.join(', ')}`;
 
                 message = `*LIVRAISON DIRECTE 🚀*%0A👤 Nom: ${nom}%0A📍 ${com}, ${ave}%0A🏠 N°: ${num}%0A📍 _J'envoie ma localisation._%0A%0A*COMMANDE:*${commande}`;
             }
