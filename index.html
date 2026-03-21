@@ -28,9 +28,9 @@
             </div>
 
             <div class="item">
-                <img src="mc-yaourt.jpg" alt="Mc yaourt">
+                <img src="mc-yaourt.jpg" alt="Em’s yaourt">
                 <div class="info">
-                    <h3>Mc yaourt</h3>
+                    <h3>Em’s yaourt</h3>
                     <p class="price">1 500 FC</p>
                     <input type="number" id="q-can" value="0" min="0" class="qty-input">
                 </div>
@@ -46,9 +46,9 @@
             </div>
 
             <div class="item">
-                <img src="burger.jpg" alt="Burger">
+                <img src="burger.jpg" alt="Djo-burger ">
                 <div class="info">
-                    <h3>Burger</h3>
+                    <h3>Djo-burger </h3>
                     <p class="price">3 000 FC</p>
                     <input type="number" id="q-burger" value="0" min="0" class="qty-input">
                 </div>
@@ -198,9 +198,9 @@
                 if(!nom || !jourD) return alert("Remplis ton nom et le numéro du jour !");
                 
                 if(qS > 0) commande += `%0A- ${qS} Tacos Standard`;
-                if(qC > 0) commande += `%0A- ${qC} Mc yaourt`;
+                if(qC > 0) commande += `%0A- ${qC} Em’s yaourt`;
                 if(qSp > 0) commande += `%0A- ${qSp} Spaghetti`;
-                if(qB > 0) commande += `%0A- ${qB} Burger`;
+                if(qB > 0) commande += `%0A- ${qB} Djo-burger`;
 
                 // Format final : Lundi 12 Janvier 2026
                 message = `*INSTITUT BOBOKOLI 🏫*%0A👤 ${nom}%0A👥 Classe: ${classe}%0A📅 Date: ${jourS} ${jourD} ${mois} ${anneeActuelle}%0A⏰ Heure: ${heure}%0A%0A*COMMANDE:*${commande}`;
