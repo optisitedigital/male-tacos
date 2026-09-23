@@ -55,6 +55,14 @@ footer{padding:45px 0 95px;background:#151114;color:#d9d2d5}.footer-inner{displa
 .reveal{opacity:0;transform:translateY(22px);transition:.7s cubic-bezier(.2,.9,.2,1)}.reveal.visible{opacity:1;transform:none}@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}@keyframes heroImg{from{opacity:0;transform:translateX(30px) scale(.96)}to{opacity:1;transform:none}}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}@keyframes fade{from{opacity:0}to{opacity:1}}
 @media(max-width:900px){.command-choice-grid{grid-template-columns:1fr}.about-grid{grid-template-columns:1fr;gap:35px}.feature-grid{grid-template-columns:1fr 1fr}.order-modal-panel{width:100%;max-height:94vh;border-radius:26px 26px 0 0}}@media(max-width:900px){.hero-inner{grid-template-columns:1fr;min-height:auto}.hero-copy{padding:70px 0 20px}.hero-product{height:430px;margin-top:-15px}.hero-product:before{width:330px;height:330px}.hero-product img{height:390px}.product-grid{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr}.choice-grid{grid-template-columns:1fr}.header-order{display:none}}
 @media(max-width:620px){.feature-grid{grid-template-columns:1fr}.command-choice{min-height:255px;padding:23px}.command-choice h3{font-size:24px}.about-visual,.about-visual img{min-height:360px;height:360px}.order-modal-panel{padding:20px 14px}.order-modal-switch{width:100%}.modal-switch{flex:1}.order-modal-head{margin-bottom:12px}}@media(max-width:620px){.container{width:min(var(--max),calc(100% - 26px))}.topbar{font-size:11px}.header{height:70px}.brand img{width:38px;height:38px}.brand strong{font-size:17px}.hero{min-height:auto}.hero-copy{padding:55px 0 8px}.hero h1{font-size:45px}.hero-sub{font-size:15px}.hero-cta .btn{width:100%}.hero-meta{gap:15px}.hero-product{height:355px}.hero-product:before{width:285px;height:285px}.hero-product img{height:330px}.hero-tag{right:2%;bottom:22px;padding:11px 12px}.section{padding:66px 0}.section-head{display:block}.section-head p{margin-top:12px}.product-grid{grid-template-columns:1fr 1fr;gap:11px}.product-img{height:145px}.product-body{padding:12px}.product-name{font-size:13px}.variant-row{display:block}.stepper{margin-top:7px;justify-content:space-between}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.footer-inner{display:block}.footer-copy{margin-top:12px}.drawer{padding:22px}.admin-top{align-items:flex-start;flex-direction:column}}
+
+/* PWA install prompt */
+.install-prompt{position:fixed;left:18px;right:18px;bottom:18px;z-index:120;background:#fff;border:1px solid #eadfe2;border-radius:22px;box-shadow:0 24px 70px rgba(40,5,18,.20);padding:15px 16px;display:flex;align-items:center;gap:14px;transform:translateY(150%);opacity:0;pointer-events:none;transition:.45s cubic-bezier(.2,.9,.2,1);max-width:620px;margin:auto}
+.install-prompt.show{transform:none;opacity:1;pointer-events:auto}
+.install-icon{width:46px;height:46px;border-radius:14px;object-fit:cover;background:var(--soft);flex:0 0 46px}
+.install-copy{min-width:0;flex:1}.install-copy strong{display:block;font-size:14px}.install-copy span{display:block;color:#777;font-size:12px;line-height:1.45;margin-top:3px}
+.install-actions{display:flex;gap:7px;align-items:center}.install-btn{background:var(--red);color:#fff;padding:10px 13px;border-radius:11px;font-weight:900;font-size:12px;white-space:nowrap}.install-close{width:34px;height:34px;border-radius:10px;background:#f8eef0;color:var(--red);font-weight:900}
+@media(max-width:620px){.install-prompt{left:10px;right:10px;bottom:10px;padding:13px}.install-icon{width:40px;height:40px;flex-basis:40px}.install-copy span{font-size:11px}.install-btn{padding:10px 11px}}
 </style>
 </head>
 <body>
@@ -88,7 +96,6 @@ footer{padding:45px 0 95px;background:#151114;color:#d9d2d5}.footer-inner{displa
     <a href="#savoirfaire">Notre savoir-faire</a>
     <a href="#infos">Infos & livraison</a>
     <a href="#commande" class="accent">Commander</a>
-    <button id="drawerAdmin">Administration</button>
   </nav>
   <div class="drawer-info">Institut Bobokoli pour le retrait élève.<br>UPN · Cité Verte · Macampagne · Kitambo Magasin pour la livraison.</div>
 </aside>
@@ -198,18 +205,16 @@ footer{padding:45px 0 95px;background:#151114;color:#d9d2d5}.footer-inner{displa
 <section class="section" id="infos"><div class="container"><div class="section-head reveal"><div><div class="section-kicker">Malé Tacos</div><h2>Les infos utiles.</h2></div><p>Tout ce qu'il faut pour passer une commande sans perdre de temps.</p></div><div class="info-grid"><div class="info-card reveal"><h3>Livraison à Kinshasa</h3><ul><li><span class="dot"></span><span>Zones : UPN, Cité Verte, Macampagne et Kitambo Magasin.</span></li><li><span class="dot"></span><span>Frais de livraison : <strong>6 000 FC</strong>.</span></li><li><span class="dot"></span><span>Après la commande, envoie ta localisation sur WhatsApp pour faciliter la livraison.</span></li></ul></div><div class="info-card whatsapp-card reveal"><h3>Commande directe</h3><p>Une fois ton panier prêt, Malé Tacos ouvre WhatsApp avec le récapitulatif de ta commande. Tu vérifies les détails avant l'envoi.</p><a class="whatsapp" href="https://wa.me/243858679024" target="_blank" rel="noopener">Ouvrir WhatsApp</a></div></div></div></section>
 </main>
 
+<div class="install-prompt" id="installPrompt" aria-hidden="true">
+  <img class="install-icon" src="icon-192.png" alt="Malé Tacos">
+  <div class="install-copy"><strong>Installe Malé Tacos</strong><span>Garde l'application sur ton téléphone pour commander plus tard, plus rapidement.</span></div>
+  <div class="install-actions"><button class="install-btn" id="installBtn">Installer</button><button class="install-close" id="installClose" aria-label="Fermer">×</button></div>
+</div>
+
 <footer><div class="container footer-inner"><div class="footer-brand">MALÉ TACOS</div><div class="footer-copy">Tacos · burgers · snacks — Kinshasa. © <span id="year"></span> Malé Tacos. Tous droits réservés.</div></div></footer>
 
 <div class="cart-bar" id="cartBar"><div class="cart-info"><span class="cart-count" id="cartCount">0 article</span><span class="cart-total" id="cartTotal">0 FC</span></div><button class="cart-view" id="cartView">Voir la commande ↑</button></div>
 </div>
-
-<section class="admin-view" id="adminView"><div class="container">
-  <div class="admin-login" id="adminLogin"><div class="section-kicker">Espace sécurisé</div><h2>Administration</h2><p>Connecte-toi avec le mot de passe configuré sur ton serveur Malé Tacos. Le mot de passe n'est jamais affiché dans le code.</p><input class="field" id="adminPassword" type="password" placeholder="Mot de passe admin"><button class="btn btn-red" id="adminLoginBtn" style="width:100%;margin-top:12px">Se connecter</button><div class="admin-status" id="adminLoginStatus"></div></div>
-  <div class="admin-panel hide" id="adminPanel"><div class="admin-top"><div><div class="section-kicker">Gestion du catalogue</div><h2>Produits Malé Tacos</h2></div><div class="admin-row"><button class="btn btn-light" id="adminRefresh">Actualiser</button><button class="btn btn-red" id="adminExit">Retour au site</button></div></div>
-    <div class="add-box"><h3 style="font-family:Manrope;margin-bottom:14px">Ajouter un produit</h3><div class="fields"><select class="field" id="newCategory"><option value="eleve">Institut Bobokoli</option><option value="exterieur">Livraison</option></select><input class="field" id="newName" placeholder="Nom du produit"><input class="field" id="newPrice" type="number" placeholder="Prix en FC (élève)"><input class="field" id="newImage" placeholder="Image : ex. tacos-viande.jpg ou URL"><input class="field" id="newL" type="number" placeholder="Prix L (livraison)"><input class="field" id="newXL" type="number" placeholder="Prix XL (livraison)"></div><button class="btn btn-red" id="addProduct" style="margin-top:13px">Ajouter le produit</button><div class="admin-status" id="adminStatus"></div></div>
-    <div class="admin-products" id="adminProducts"></div>
-  </div>
-</div></section>
 
 <script>
 'use strict';
@@ -220,7 +225,7 @@ const FALLBACK={
   sauces:['Barbeche','Algérienne','Mayonnaise','Ketchup','Samouraï','Piment'],
   supplements:[{name:'Cheddar',price:4000},{name:'Oeuf',price:4000},{name:'Salami',price:4000},{name:'Jambon',price:4000},{name:'Vache qui rit',price:4000},{name:'Gouda',price:4000},{name:'Mozarella',price:4000},{name:'Lardon',price:4000},{name:'Bacon',price:4000}],deliveryFee:6000
 };
-let products=FALLBACK, adminPassword='';
+let products=FALLBACK;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const fc=n=>Number(n||0).toLocaleString('fr-FR')+' FC';
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
@@ -264,17 +269,19 @@ const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){
 function openOrderModal(type='exterieur'){closeDrawer();$('#orderModal').classList.add('show');$('#orderModal').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setTab(type);$('#orderModalTitle').textContent=type==='eleve'?'Commande Institut Bobokoli':'Commande Extérieur / Livraison'}
 function closeOrderModal(){$('#orderModal').classList.remove('show');$('#orderModal').setAttribute('aria-hidden','true');document.body.style.overflow=''}
 $$('[data-open-order]').forEach(b=>b.onclick=()=>openOrderModal(b.dataset.openOrder));$('#orderModalClose').onclick=closeOrderModal;$('#orderModalBackdrop').onclick=closeOrderModal;$$('.modal-switch').forEach(b=>b.addEventListener('click',()=>$('#orderModalTitle').textContent=b.dataset.modalTab==='eleve'?'Commande Institut Bobokoli':'Commande Extérieur / Livraison'));$('#headerOrder')?.addEventListener('click',e=>{e.preventDefault();document.querySelector('#commande')?.scrollIntoView({behavior:'smooth'})});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#orderModal').classList.contains('show'))closeOrderModal()});
-// Admin
-function adminHeaders(){return {'Content-Type':'application/json','x-admin-password':adminPassword}}function adminShow(){closeDrawer();$('#publicView').style.display='none';$('footer').style.display='none';$('#cartBar').style.display='none';$('#adminView').classList.add('show');location.hash='admin';window.scrollTo(0,0)}function adminExit(){location.hash='';$('#adminView').classList.remove('show');$('#publicView').style.display='';$('footer').style.display='';$('#cartBar').style.display='';window.scrollTo(0,0)}
-$('#drawerAdmin').onclick=adminShow;$('#adminExit').onclick=adminExit;
-async function adminLogin(){const p=$('#adminPassword').value;if(!p)return;$('#adminLoginStatus').textContent='Connexion…';try{const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:p})});if(!r.ok)throw new Error('Mot de passe incorrect');adminPassword=p;$('#adminLogin').classList.add('hide');$('#adminPanel').classList.remove('hide');$('#adminLoginStatus').textContent='';await adminLoad()}catch(e){$('#adminLoginStatus').textContent=e.message||'Connexion impossible.'}}
-$('#adminLoginBtn').onclick=adminLogin;$('#adminPassword').addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin()});
-async function adminLoad(){const box=$('#adminProducts');box.innerHTML='<div class="admin-status">Chargement…</div>';try{const r=await fetch('/api/products',{cache:'no-store'});if(!r.ok)throw new Error('Impossible de charger les produits');const d=await r.json();products=d;renderAll();const all=[...(d.eleve||[]).map(p=>({...p,category:'eleve'})),...(d.exterieur||[]).map(p=>({...p,category:'exterieur'}))];box.innerHTML=all.map(p=>`<div class="admin-item"><div class="admin-item-main"><img src="${esc(productImage(p.image))}" alt=""><div><strong>${esc(p.name)}</strong><small>${p.category==='eleve'?fc(p.price):(p.variants||[]).map(v=>v.size+' '+fc(v.price)).join(' · ')}</small></div></div><button class="danger" data-delete-cat="${p.category}" data-delete-id="${esc(p.id)}">Supprimer</button></div>`).join('')||'<div class="admin-status">Aucun produit.</div>';$$('[data-delete-id]').forEach(b=>b.onclick=()=>adminDelete(b.dataset.deleteCat,b.dataset.deleteId,b));}catch(e){box.innerHTML='<div class="admin-status">'+esc(e.message)+'</div>'}}
-async function adminDelete(category,id,btn){if(!confirm('Supprimer ce produit ?'))return;btn.disabled=true;try{const r=await fetch('/api/admin/products/'+category+'/'+encodeURIComponent(id),{method:'DELETE',headers:adminHeaders()});if(!r.ok)throw new Error((await r.json().catch(()=>({}))).error||'Suppression impossible');const d=await r.json();products=d.products;renderAll();await adminLoad()}catch(e){alert(e.message);btn.disabled=false}}
-$('#adminRefresh').onclick=adminLoad;
-$('#addProduct').onclick=async()=>{const cat=$('#newCategory').value,name=$('#newName').value.trim(),image=$('#newImage').value.trim()||'tacos-viande.jpg';if(!name){alert('Ajoute un nom de produit.');return}let body={id:'p'+Date.now(),name,image};if(cat==='eleve'){const price=Number($('#newPrice').value);if(!price){alert('Ajoute le prix.');return}body.price=price}else{const L=Number($('#newL').value),XL=Number($('#newXL').value);if(!L&&!XL){alert('Ajoute au moins un prix L ou XL.');return}body.variants=[];if(L)body.variants.push({size:'L',price:L});if(XL)body.variants.push({size:'XL',price:XL})}const s=$('#adminStatus');s.textContent='Ajout en cours…';try{const r=await fetch('/api/admin/products/'+cat,{method:'POST',headers:adminHeaders(),body:JSON.stringify(body)});const d=await r.json();if(!r.ok)throw new Error(d.error||'Ajout impossible');products=d.products;renderAll();$('#newName').value='';$('#newPrice').value='';$('#newImage').value='';$('#newL').value='';$('#newXL').value='';s.textContent='Produit ajouté.';await adminLoad()}catch(e){s.textContent=e.message}};
-if(location.hash==='#admin')adminShow();
 loadProducts();
+
+// PWA : installation de l'application
+let deferredInstallPrompt=null;
+const installPromptEl=$('#installPrompt'), installBtn=$('#installBtn'), installClose=$('#installClose');
+function isStandalone(){return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;}
+function showInstallPrompt(){if(!isStandalone() && localStorage.getItem('maleTacosInstallDismissed')!=='1'){installPromptEl.classList.add('show');installPromptEl.setAttribute('aria-hidden','false');}}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;setTimeout(showInstallPrompt,3500);});
+installBtn.addEventListener('click',async()=>{if(deferredInstallPrompt){deferredInstallPrompt.prompt();const choice=await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;if(choice.outcome==='accepted'){installPromptEl.classList.remove('show');}}else{alert('Sur iPhone : appuie sur Partager puis « Ajouter à l’écran d’accueil ». Sur Android : ouvre le menu du navigateur puis « Installer l’application ».');}});
+installClose.addEventListener('click',()=>{installPromptEl.classList.remove('show');installPromptEl.setAttribute('aria-hidden','true');localStorage.setItem('maleTacosInstallDismissed','1');});
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
+if(!isStandalone() && !localStorage.getItem('maleTacosInstallDismissed')) setTimeout(showInstallPrompt,6500);
+
 </script>
 </body>
 </html>
