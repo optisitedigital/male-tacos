@@ -1,9 +1,29 @@
 {
   "eleve": [
-    { "id": "std", "name": "Tacos Standard", "price": 5000, "image": "standard.jpg" },
-    { "id": "can", "name": "Em's yaourt", "price": 1500, "image": "mc-yaourt.jpg" },
-    { "id": "spag", "name": "Spaghetti Bolognaise", "price": 1500, "image": "spaghetti.jpg" },
-    { "id": "burger", "name": "Djo-burger", "price": 3000, "image": "burger.jpg" }
+    {
+      "id": "std",
+      "name": "Tacos Standard",
+      "price": 5000,
+      "image": "standard.jpg"
+    },
+    {
+      "id": "can",
+      "name": "Em's yaourt",
+      "price": 1500,
+      "image": "mc-yaourt.jpg"
+    },
+    {
+      "id": "spag",
+      "name": "Spaghetti Bolognaise",
+      "price": 1500,
+      "image": "spaghetti.jpg"
+    },
+    {
+      "id": "burger",
+      "name": "Djo-burger",
+      "price": 3000,
+      "image": "burger.jpg"
+    }
   ],
   "exterieur": [
     {
@@ -11,8 +31,14 @@
       "name": "Tacos Viande Hachée",
       "image": "tacos-viande.jpg",
       "variants": [
-        { "size": "L", "price": 12000 },
-        { "size": "XL", "price": 24000 }
+        {
+          "size": "L",
+          "price": 12000
+        },
+        {
+          "size": "XL",
+          "price": 24000
+        }
       ]
     },
     {
@@ -20,22 +46,62 @@
       "name": "Tacos au Poulet",
       "image": "tacos-poulet.jpg",
       "variants": [
-        { "size": "L", "price": 10000 },
-        { "size": "XL", "price": 20000 }
+        {
+          "size": "L",
+          "price": 10000
+        },
+        {
+          "size": "XL",
+          "price": 20000
+        }
       ]
     }
   ],
-  "sauces": ["Barbeche", "Algérienne", "Mayonnaise", "Ketchup", "Samouraï", "Piment"],
+  "sauces": [
+    "Barbeche",
+    "Algérienne",
+    "Mayonnaise",
+    "Ketchup",
+    "Samouraï",
+    "Piment"
+  ],
   "supplements": [
-    { "name": "Cheddar", "price": 4000 },
-    { "name": "Oeuf", "price": 4000 },
-    { "name": "Salami", "price": 4000 },
-    { "name": "Jambon", "price": 4000 },
-    { "name": "Vache qui rit", "price": 4000 },
-    { "name": "Gouda", "price": 4000 },
-    { "name": "Mozarella", "price": 4000 },
-    { "name": "Lardon", "price": 4000 },
-    { "name": "Bacon", "price": 4000 }
+    {
+      "name": "Cheddar",
+      "price": 4000
+    },
+    {
+      "name": "Oeuf",
+      "price": 4000
+    },
+    {
+      "name": "Salami",
+      "price": 4000
+    },
+    {
+      "name": "Jambon",
+      "price": 4000
+    },
+    {
+      "name": "Vache qui rit",
+      "price": 4000
+    },
+    {
+      "name": "Gouda",
+      "price": 4000
+    },
+    {
+      "name": "Mozarella",
+      "price": 4000
+    },
+    {
+      "name": "Lardon",
+      "price": 4000
+    },
+    {
+      "name": "Bacon",
+      "price": 4000
+    }
   ],
   "deliveryFee": 6000
 }
