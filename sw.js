@@ -1,15 +1,16 @@
 // Service Worker - Malé Tacos
 // Gère le cache offline et sert de base pour les futures notifications push
 
-const CACHE_NAME = 'male-tacos-v1';
+const CACHE_NAME = 'male-tacos-v3';
 const OFFLINE_URL = './index.html';
 
 // Fichiers essentiels à mettre en cache pour un fonctionnement offline correct
 const PRECACHE_ASSETS = [
   './',
   './index.html',
-  './css/style.css',
+  './style.css',
   './js/app.js',
+  './js/products-render.js',
   './manifest.webmanifest',
   './logo-male.png',
   './standard.jpg',
@@ -88,8 +89,8 @@ self.addEventListener('push', (event) => {
   event.waitUntil(
     self.registration.showNotification(data.title || 'Malé Tacos', {
       body: data.body || '',
-      icon: './icons/icon-192.png',
-      badge: './icons/icon-192.png',
+      icon: './icon-192.png',
+      badge: './icon-192.png',
       tag: 'male-tacos-notification'
     })
   );
