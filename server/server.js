@@ -6,9 +6,10 @@ const crypto = require('crypto');
 
 const app = express();
 
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Sert tout le site public + admin.html
+// Site public + dashboard admin
 app.use(express.static(path.join(__dirname, '..')));
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -17,13 +18,60 @@ const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 const PRODUCTS_PATH = 'products.json';
-
-// ======================================================
-// AUTHENTIFICATION ADMIN
-// ======================================================
-
 const ADMIN_COOKIE = 'male_tacos_admin';
-const SESSION_DURATION = 12 * 60 * 60 * 1000; // 12 heures
+const SESSION_DURATION = 12 * 60 * 60 * 1000;
+
+// ======================================================
+// OUTILS
+// ======================================================
+
+function githubHeaders() {
+  return {
+    Authorization: `Bearer ${GITHUB_TOKEN}`,
+    Accept: 'application/vnd.github+json',
+    'Content-Type': 'application/json',
+    'User-Agent': 'male-tacos-admin'
+  };
+}
+
+function requireGithubConfig() {
+  if (!GITHUB_TOKEN || !GITHUB_REPO) {
+    throw new Error(
+      'GITHUB_TOKEN ou GITHUB_REPO n’est pas configuré sur Render.'
+    );
+  }
+}
+
+function sanitizeText(value, fallback = '') {
+  if (typeof value !== 'string') return fallback;
+  return value.trim();
+}
+
+function createProductId(name) {
+  const base = sanitizeText(name, 'produit')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40);
+
+  return `${base || 'produit'}-${Date.now()}`;
+}
+
+function safeFilename(name) {
+  return sanitizeText(name, 'produit')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 50);
+}
+
+// ======================================================
+// AUTH ADMIN
+// ======================================================
 
 function createAdminToken() {
   const timestamp = Date.now().toString();
@@ -33,14 +81,19 @@ function createAdminToken() {
     .update(timestamp)
     .digest('hex');
 
-  return Buffer.from(`${timestamp}.${signature}`).toString('base64url');
+  return Buffer
+    .from(`${timestamp}.${signature}`)
+    .toString('base64url');
 }
 
 function verifyAdminToken(token) {
   if (!ADMIN_PASSWORD || !token) return false;
 
   try {
-    const decoded = Buffer.from(token, 'base64url').toString('utf8');
+    const decoded = Buffer
+      .from(token, 'base64url')
+      .toString('utf8');
+
     const [timestamp, signature] = decoded.split('.');
 
     if (!timestamp || !signature) return false;
@@ -58,6 +111,10 @@ function verifyAdminToken(token) {
       .update(timestamp)
       .digest('hex');
 
+    if (signature.length !== expectedSignature.length) {
+      return false;
+    }
+
     return crypto.timingSafeEqual(
       Buffer.from(signature),
       Buffer.from(expectedSignature)
@@ -72,9 +129,7 @@ function getCookie(req, name) {
 
   if (!header) return null;
 
-  const cookies = header.split(';');
-
-  for (const cookie of cookies) {
+  for (const cookie of header.split(';')) {
     const index = cookie.indexOf('=');
 
     if (index === -1) continue;
@@ -93,7 +148,7 @@ function getCookie(req, name) {
 function checkAdmin(req, res, next) {
   if (!ADMIN_PASSWORD) {
     return res.status(500).json({
-      error: 'ADMIN_PASSWORD non configuré côté serveur'
+      error: 'ADMIN_PASSWORD non configuré sur Render.'
     });
   }
 
@@ -101,7 +156,7 @@ function checkAdmin(req, res, next) {
 
   if (!verifyAdminToken(token)) {
     return res.status(401).json({
-      error: 'Session administrateur expirée ou invalide'
+      error: 'Session administrateur expirée ou invalide.'
     });
   }
 
@@ -118,26 +173,26 @@ app.post('/api/admin/login', (req, res) => {
   if (!ADMIN_PASSWORD) {
     return res.status(500).json({
       ok: false,
-      error: 'ADMIN_PASSWORD non configuré côté serveur'
+      error: 'ADMIN_PASSWORD non configuré sur Render.'
     });
   }
 
   if (
     typeof password !== 'string' ||
-    password.length === 0 ||
     password !== ADMIN_PASSWORD
   ) {
     return res.status(401).json({
       ok: false,
-      error: 'Mot de passe incorrect'
+      error: 'Mot de passe incorrect.'
     });
   }
 
   const token = createAdminToken();
 
-  const secure = process.env.NODE_ENV === 'production'
-    ? '; Secure'
-    : '';
+  const secure =
+    process.env.NODE_ENV === 'production'
+      ? '; Secure'
+      : '';
 
   res.setHeader(
     'Set-Cookie',
@@ -165,7 +220,7 @@ app.post('/api/admin/logout', (req, res) => {
 });
 
 // ======================================================
-// VÉRIFICATION SESSION
+// SESSION
 // ======================================================
 
 app.get('/api/admin/session', checkAdmin, (req, res) => {
@@ -175,30 +230,24 @@ app.get('/api/admin/session', checkAdmin, (req, res) => {
 });
 
 // ======================================================
-// GITHUB — LECTURE PRODUCTS.JSON
+// GITHUB — LIRE PRODUCTS.JSON
 // ======================================================
 
 async function getProductsFile() {
-  if (!GITHUB_TOKEN || !GITHUB_REPO) {
-    throw new Error(
-      'GITHUB_TOKEN ou GITHUB_REPO non configuré côté serveur'
-    );
-  }
+  requireGithubConfig();
 
   const url =
-    `https://api.github.com/repos/${GITHUB_REPO}/contents/${PRODUCTS_PATH}?ref=${GITHUB_BRANCH}`;
+    `https://api.github.com/repos/${GITHUB_REPO}/contents/${PRODUCTS_PATH}?ref=${encodeURIComponent(GITHUB_BRANCH)}`;
 
   const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
-      Accept: 'application/vnd.github+json',
-      'User-Agent': 'male-tacos-admin'
-    }
+    headers: githubHeaders()
   });
 
   if (!response.ok) {
+    const text = await response.text();
+
     throw new Error(
-      `Impossible de lire products.json sur GitHub (${response.status})`
+      `Impossible de lire products.json (${response.status}) : ${text}`
     );
   }
 
@@ -215,44 +264,39 @@ async function getProductsFile() {
 }
 
 // ======================================================
-// GITHUB — SAUVEGARDE PRODUCTS.JSON
+// GITHUB — SAUVER PRODUCTS.JSON
 // ======================================================
 
-async function saveProductsFile(newContent, sha, message) {
-  if (!GITHUB_TOKEN || !GITHUB_REPO) {
-    throw new Error(
-      'GITHUB_TOKEN ou GITHUB_REPO non configuré côté serveur'
-    );
-  }
+async function saveProductsFile(content, sha, message) {
+  requireGithubConfig();
 
   const url =
     `https://api.github.com/repos/${GITHUB_REPO}/contents/${PRODUCTS_PATH}`;
 
   const body = {
-    message: message || 'Mise à jour des produits via le panneau admin',
-    content: Buffer.from(
-      JSON.stringify(newContent, null, 2)
-    ).toString('base64'),
+    message:
+      message ||
+      'Mise à jour du menu via le dashboard Malé Tacos',
+
+    content: Buffer
+      .from(JSON.stringify(content, null, 2))
+      .toString('base64'),
+
     sha,
     branch: GITHUB_BRANCH
   };
 
   const response = await fetch(url, {
     method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
-      Accept: 'application/vnd.github+json',
-      'Content-Type': 'application/json',
-      'User-Agent': 'male-tacos-admin'
-    },
+    headers: githubHeaders(),
     body: JSON.stringify(body)
   });
 
   if (!response.ok) {
-    const errorText = await response.text();
+    const text = await response.text();
 
     throw new Error(
-      `Erreur GitHub (${response.status}) : ${errorText}`
+      `Erreur GitHub products.json (${response.status}) : ${text}`
     );
   }
 
@@ -260,74 +304,129 @@ async function saveProductsFile(newContent, sha, message) {
 }
 
 // ======================================================
-// VALIDATION PRODUCTS.JSON
+// GITHUB — UPLOAD IMAGE
+// ======================================================
+
+async function uploadImageToGithub({
+  base64,
+  mimeType,
+  productName
+}) {
+  requireGithubConfig();
+
+  if (!base64) {
+    throw new Error('Aucune image reçue.');
+  }
+
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(mimeType)) {
+    throw new Error(
+      'Format image non supporté. Utilise JPG, PNG ou WebP.'
+    );
+  }
+
+  const extension =
+    mimeType === 'image/png'
+      ? 'png'
+      : mimeType === 'image/webp'
+        ? 'webp'
+        : 'jpg';
+
+  const filename =
+    `${safeFilename(productName) || 'produit'}-${Date.now()}.${extension}`;
+
+  const githubPath = `images/products/${filename}`;
+
+  const cleanBase64 = base64.includes(',')
+    ? base64.split(',')[1]
+    : base64;
+
+  const buffer = Buffer.from(cleanBase64, 'base64');
+
+  if (!buffer.length) {
+    throw new Error('Image vide ou invalide.');
+  }
+
+  // Sécurité : éviter les images énormes
+  if (buffer.length > 7 * 1024 * 1024) {
+    throw new Error(
+      'Image trop lourde. Choisis une image plus légère.'
+    );
+  }
+
+  const url =
+    `https://api.github.com/repos/${GITHUB_REPO}/contents/${githubPath}`;
+
+  const body = {
+    message: `Ajout image produit: ${productName}`,
+    content: buffer.toString('base64'),
+    branch: GITHUB_BRANCH
+  };
+
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: githubHeaders(),
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+
+    throw new Error(
+      `Impossible d'envoyer l'image sur GitHub (${response.status}) : ${text}`
+    );
+  }
+
+  return filename;
+}
+
+// ======================================================
+// VALIDATION
 // ======================================================
 
 function validateProductsStructure(content) {
   if (!content || typeof content !== 'object') {
-    throw new Error('Structure products.json invalide');
+    throw new Error('Structure products.json invalide.');
   }
 
   if (!Array.isArray(content.eleve)) {
-    throw new Error('La section eleve doit être un tableau');
+    throw new Error('La section eleve doit être un tableau.');
   }
 
   if (!Array.isArray(content.exterieur)) {
-    throw new Error('La section exterieur doit être un tableau');
+    throw new Error('La section exterieur doit être un tableau.');
   }
 
   if (!Array.isArray(content.sauces)) {
-    throw new Error('La section sauces doit être conservée');
+    throw new Error('La section sauces doit être conservée.');
   }
 
   if (!Array.isArray(content.supplements)) {
-    throw new Error('La section supplements doit être conservée');
+    throw new Error('La section supplements doit être conservée.');
   }
 
   if (
     typeof content.deliveryFee !== 'number' ||
     !Number.isFinite(content.deliveryFee)
   ) {
-    throw new Error('deliveryFee invalide');
+    throw new Error('deliveryFee invalide.');
   }
-}
-
-function sanitizeText(value, fallback = '') {
-  if (typeof value !== 'string') {
-    return fallback;
-  }
-
-  return value.trim();
-}
-
-function createProductId(name) {
-  const base = sanitizeText(name, 'produit')
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 40);
-
-  return `${base || 'produit'}-${Date.now()}`;
 }
 
 function validateEleveProduct(body) {
   const name = sanitizeText(body.name);
   const image = sanitizeText(body.image);
-
   const price = Number(body.price);
 
   if (!name) {
-    throw new Error('Le nom du produit est obligatoire');
+    throw new Error('Le nom du produit est obligatoire.');
   }
 
   if (!image) {
-    throw new Error('L’image du produit est obligatoire');
+    throw new Error('La photo du produit est obligatoire.');
   }
 
   if (!Number.isFinite(price) || price < 0) {
-    throw new Error('Le prix est invalide');
+    throw new Error('Le prix est invalide.');
   }
 
   return {
@@ -345,19 +444,19 @@ function validateExterieurProduct(body) {
   const priceXL = Number(body.priceXL);
 
   if (!name) {
-    throw new Error('Le nom du produit est obligatoire');
+    throw new Error('Le nom du produit est obligatoire.');
   }
 
   if (!image) {
-    throw new Error('L’image du produit est obligatoire');
+    throw new Error('La photo du produit est obligatoire.');
   }
 
   if (!Number.isFinite(priceL) || priceL < 0) {
-    throw new Error('Le prix L est invalide');
+    throw new Error('Le prix L est invalide.');
   }
 
   if (!Number.isFinite(priceXL) || priceXL < 0) {
-    throw new Error('Le prix XL est invalide');
+    throw new Error('Le prix XL est invalide.');
   }
 
   return {
@@ -391,34 +490,40 @@ app.get('/api/products', async (req, res) => {
     console.error(error);
 
     res.status(500).json({
-      error: 'Impossible de charger les produits'
+      error: 'Impossible de charger les produits.'
     });
   }
 });
 
 // ======================================================
-// API ADMIN — LECTURE
+// ADMIN — LIRE PRODUITS
 // ======================================================
 
-app.get('/api/admin/products', checkAdmin, async (req, res) => {
-  try {
-    const { content } = await getProductsFile();
+app.get(
+  '/api/admin/products',
+  checkAdmin,
+  async (req, res) => {
+    try {
+      const { content } = await getProductsFile();
 
-    res.json({
-      ok: true,
-      products: content
-    });
-  } catch (error) {
-    console.error(error);
+      validateProductsStructure(content);
 
-    res.status(500).json({
-      error: error.message
-    });
+      res.json({
+        ok: true,
+        products: content
+      });
+    } catch (error) {
+      console.error(error);
+
+      res.status(500).json({
+        error: error.message
+      });
+    }
   }
-});
+);
 
 // ======================================================
-// AJOUT PRODUIT
+// ADMIN — AJOUT PRODUIT
 // ======================================================
 
 app.post(
@@ -430,18 +535,36 @@ app.post(
 
       if (!['eleve', 'exterieur'].includes(category)) {
         return res.status(400).json({
-          error: 'Catégorie invalide'
+          error: 'Catégorie invalide.'
         });
       }
 
-      const { content, sha } = await getProductsFile();
+      const { content, sha } =
+        await getProductsFile();
 
       validateProductsStructure(content);
 
       let product;
 
+      // ------------------------------
+      // INSTITUT BOBOKOLI
+      // ------------------------------
+
       if (category === 'eleve') {
-        product = validateEleveProduct(req.body);
+        let image = sanitizeText(req.body.image);
+
+        if (req.body.imageData) {
+          image = await uploadImageToGithub({
+            base64: req.body.imageData,
+            mimeType: req.body.imageMimeType,
+            productName: req.body.name
+          });
+        }
+
+        product = validateEleveProduct({
+          ...req.body,
+          image
+        });
 
         product = {
           id: createProductId(product.name),
@@ -449,8 +572,25 @@ app.post(
         };
       }
 
+      // ------------------------------
+      // LIVRAISON / EXTÉRIEUR
+      // ------------------------------
+
       if (category === 'exterieur') {
-        product = validateExterieurProduct(req.body);
+        let image = sanitizeText(req.body.image);
+
+        if (req.body.imageData) {
+          image = await uploadImageToGithub({
+            base64: req.body.imageData,
+            mimeType: req.body.imageMimeType,
+            productName: req.body.name
+          });
+        }
+
+        product = validateExterieurProduct({
+          ...req.body,
+          image
+        });
 
         product = {
           id: createProductId(product.name),
@@ -469,7 +609,7 @@ app.post(
       res.json({
         ok: true,
         products: content,
-        message: 'Produit ajouté avec succès'
+        message: 'Produit ajouté avec succès.'
       });
     } catch (error) {
       console.error(error);
@@ -482,7 +622,7 @@ app.post(
 );
 
 // ======================================================
-// MODIFICATION PRODUIT
+// ADMIN — MODIFICATION
 // ======================================================
 
 app.put(
@@ -494,35 +634,60 @@ app.put(
 
       if (!['eleve', 'exterieur'].includes(category)) {
         return res.status(400).json({
-          error: 'Catégorie invalide'
+          error: 'Catégorie invalide.'
         });
       }
 
-      const { content, sha } = await getProductsFile();
+      const { content, sha } =
+        await getProductsFile();
 
       validateProductsStructure(content);
 
-      const index = content[category].findIndex(
-        product => product.id === id
-      );
+      const index =
+        content[category].findIndex(
+          product => product.id === id
+        );
 
       if (index === -1) {
         return res.status(404).json({
-          error: 'Produit introuvable'
+          error: 'Produit introuvable.'
+        });
+      }
+
+      const oldProduct = content[category][index];
+
+      let image =
+        sanitizeText(req.body.image) ||
+        oldProduct.image;
+
+      // Nouvelle photo choisie
+      if (req.body.imageData) {
+        image = await uploadImageToGithub({
+          base64: req.body.imageData,
+          mimeType: req.body.imageMimeType,
+          productName: req.body.name
         });
       }
 
       let updatedProduct;
 
       if (category === 'eleve') {
-        const validated = validateEleveProduct(req.body);
+        const validated =
+          validateEleveProduct({
+            ...req.body,
+            image
+          });
 
         updatedProduct = {
           id,
           ...validated
         };
       } else {
-        const validated = validateExterieurProduct(req.body);
+        const validated =
+          validateExterieurProduct({
+            ...req.body,
+            image
+          });
 
         updatedProduct = {
           id,
@@ -530,7 +695,8 @@ app.put(
         };
       }
 
-      content[category][index] = updatedProduct;
+      content[category][index] =
+        updatedProduct;
 
       await saveProductsFile(
         content,
@@ -541,7 +707,7 @@ app.put(
       res.json({
         ok: true,
         products: content,
-        message: 'Produit modifié avec succès'
+        message: 'Produit modifié avec succès.'
       });
     } catch (error) {
       console.error(error);
@@ -554,7 +720,7 @@ app.put(
 );
 
 // ======================================================
-// SUPPRESSION PRODUIT
+// ADMIN — SUPPRESSION
 // ======================================================
 
 app.delete(
@@ -566,27 +732,30 @@ app.delete(
 
       if (!['eleve', 'exterieur'].includes(category)) {
         return res.status(400).json({
-          error: 'Catégorie invalide'
+          error: 'Catégorie invalide.'
         });
       }
 
-      const { content, sha } = await getProductsFile();
+      const { content, sha } =
+        await getProductsFile();
 
       validateProductsStructure(content);
 
-      const existingProduct = content[category].find(
-        product => product.id === id
-      );
+      const existingProduct =
+        content[category].find(
+          product => product.id === id
+        );
 
       if (!existingProduct) {
         return res.status(404).json({
-          error: 'Produit introuvable'
+          error: 'Produit introuvable.'
         });
       }
 
-      content[category] = content[category].filter(
-        product => product.id !== id
-      );
+      content[category] =
+        content[category].filter(
+          product => product.id !== id
+        );
 
       await saveProductsFile(
         content,
@@ -597,7 +766,7 @@ app.delete(
       res.json({
         ok: true,
         products: content,
-        message: 'Produit supprimé avec succès'
+        message: 'Produit supprimé avec succès.'
       });
     } catch (error) {
       console.error(error);
