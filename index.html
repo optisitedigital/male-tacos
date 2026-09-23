@@ -1,242 +1,259 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Malé Tacos - Institut Bobokoli</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Malé Tacos 🌮</title>
+<meta name="description" content="Commande tes tacos et snacks en quelques secondes, à récupérer sur place ou en livraison à domicile à Kinshasa.">
+
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Malé Tacos">
+<meta property="og:title" content="Malé Tacos 🌮">
+<meta property="og:description" content="Commande tes tacos en quelques secondes, à récupérer sur place ou en livraison à domicile.">
+<meta property="og:image" content="logo-male.png">
+<meta property="og:url" content="https://male-tacos.onrender.com">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Malé Tacos 🌮">
+<meta name="twitter:description" content="Commande tes tacos en quelques secondes, à récupérer sur place ou en livraison à domicile.">
+<meta name="twitter:image" content="logo-male.png">
+
+<meta name="theme-color" content="#c41e16">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .inapp-locked > *:not(#inappOverlay) { display: none !important; }
+  #inappOverlay { display: none; }
+</style>
 </head>
 <body>
 
-    <header>
-        <img src="logo-male.png" alt="Logo Malé Tacos" class="logo-header">
-        <h1>Malé Tacos</h1>
-        <p>Exclusivité à l'Institut Bobokoli! 🌮</p>
-    </header>
+<!-- ======================================================================
+     DÉTECTION NAVIGATEUR INTÉGRÉ (TikTok, Instagram, Facebook, etc.)
+     ====================================================================== -->
+<div id="inappOverlay" class="inapp-overlay">
+  <div class="inapp-icon">🌐</div>
+  <h1 class="inapp-title">Ouvre le site dans ton navigateur</h1>
+  <p class="inapp-text">Pour passer ta commande, ouvre cette page dans ton navigateur (Chrome ou Safari).</p>
+  <div class="inapp-steps">
+    1. Appuie sur les <strong>3 points ⋯</strong> (ou l'icône de partage) en haut à droite<br>
+    2. Choisis <strong>« Ouvrir dans le navigateur »</strong>
+  </div>
+  <button class="btn btn-primary inapp-btn" id="inappOpenBtn">Ouvrir dans mon navigateur</button>
+</div>
 
-    <main>
-        <section id="menu-retrait">
-            <h2 class="title-section">🔥 TARIFS ÉLÈVES (BOBOKOLI) 🔥</h2>
-            
-            <div class="item">
-                <img src="standard.jpg" alt="Tacos standard">
-                <div class="info">
-                    <h3>Tacos Standard</h3>
-                    <p class="price">5 000 FC</p>
-                    <input type="number" id="q-std" value="0" min="0" class="qty-input">
-                </div>
-            </div>
+<script>
+(function () {
+  var ua = navigator.userAgent || '';
+  var inAppPatterns = /TikTok|musical_ly|BytedanceWebview|Instagram|FBAN|FBAV|Line\//i;
+  if (inAppPatterns.test(ua)) {
+    document.body.classList.add('inapp-locked');
+    document.getElementById('inappOverlay').style.display = 'flex';
 
-            <div class="item">
-                <img src="mc-yaourt.jpg" alt="Em’s yaourt">
-                <div class="info">
-                    <h3>Em’s yaourt</h3>
-                    <p class="price">1 500 FC</p>
-                    <input type="number" id="q-can" value="0" min="0" class="qty-input">
-                </div>
-            </div>
+    document.getElementById('inappOpenBtn').addEventListener('click', function () {
+      var url = window.location.href;
+      if (/android/i.test(ua)) {
+        var stripped = url.replace(/^https?:\/\//, '');
+        window.location.href = 'intent://' + stripped + '#Intent;scheme=https;package=com.android.chrome;end';
+      } else {
+        alert("Appuie sur les 3 points ⋯ en haut à droite, puis choisis « Ouvrir dans le navigateur ».");
+      }
+    });
+  }
+})();
+</script>
 
-            <div class="item">
-                <img src="spaghetti.jpg" alt="Spaghetti">
-                <div class="info">
-                    <h3>Spaghetti Bolognaise</h3>
-                    <p class="price">1 500 FC</p>
-                    <input type="number" id="q-spag" value="0" min="0" class="qty-input">
-                </div>
-            </div>
+<!-- ======================================================================
+     HEADER
+     ====================================================================== -->
+<header class="app-header">
+  <div class="brand">
+    <img src="logo-male.png" alt="Logo Malé Tacos" class="brand-logo">
+    <span class="brand-name">Malé Tacos</span>
+  </div>
+  <button class="hamburger-btn" id="hamburgerBtn" aria-label="Ouvrir le menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
 
-            <div class="item">
-                <img src="burger.jpg" alt="Djo-burger ">
-                <div class="info">
-                    <h3>Djo-burger </h3>
-                    <p class="price">3 000 FC</p>
-                    <input type="number" id="q-burger" value="0" min="0" class="qty-input">
-                </div>
-            </div>
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" id="mobileNavClose" aria-label="Fermer le menu">✕</button>
+  <ul class="mobile-nav-list">
+    <li><a href="#top">Accueil</a></li>
+    <li><a href="#menu-eleve" data-path-link="eleve">Menu Élèves</a></li>
+    <li><a href="#menu-exterieur" data-path-link="exterieur">Menu Livraison</a></li>
+    <li><a href="#cartBar" class="is-accent">Mon panier</a></li>
+    <li><button id="installMenuBtn">Installer l'application</button></li>
+  </ul>
+</nav>
 
-            <div id="fields-retrait">
-                <input type="text" id="nom-eleve" placeholder="Nom et Prénom de l'élève">
-                <input type="text" id="classe" placeholder="Ta Classe">
-                
-                <p class="label-info">Jour de récupération :</p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px;">
-                    <select id="jour-semaine" style="padding: 10px; border-radius: 8px;">
-                        <option value="Lundi">Lundi</option>
-                        <option value="Mardi">Mardi</option>
-                        <option value="Mercredi">Mercredi</option>
-                        <option value="Jeudi">Jeudi</option>
-                        <option value="Vendredi">Vendredi</option>
-                        <option value="Samedi">Samedi</option>
-                    </select>
-                    <input type="number" id="jour-date" placeholder="Jour (ex: 12)" style="padding: 10px; border-radius: 8px;">
-                    <select id="mois" style="padding: 10px; border-radius: 8px;">
-                        <option value="Janvier">Janv</option>
-                        <option value="Février">Févr</option>
-                        <option value="Mars">Mars</option>
-                        <option value="Avril">Avril</option>
-                        <option value="Mai">Mai</option>
-                        <option value="Juin">Juin</option>
-                        <option value="Juillet">Juil</option>
-                        <option value="Août">Août</option>
-                        <option value="Septembre">Sept</option>
-                        <option value="Octobre">Oct</option>
-                        <option value="Novembre">Nov</option>
-                        <option value="Décembre">Déc</option>
-                    </select>
-                </div>
+<!-- ======================================================================
+     HERO (photo)
+     ====================================================================== -->
+<main id="top">
+  <section class="hero hero-photo">
+    <div class="hero-photo-bg" style="background-image:url('tacos-viande.jpg')"></div>
+    <div class="hero-photo-overlay"></div>
+    <div class="container hero-content">
+      <span class="hero-eyebrow">Malé Tacos</span>
+      <h1 class="hero-title hero-title-light">Des tacos faits pour <em>toi</em> 🌮</h1>
+      <p class="hero-subtitle hero-subtitle-light">Commande en quelques secondes, à récupérer sur place ou livré chez toi.</p>
 
-                <p class="label-info">Heure de retrait :</p>
-                <select id="h-retrait">
-                    <option value="Matin (07h10)">Matin (07h10 à 07h30)</option>
-                    <option value="Récréation (10h00)">Récréation (10h00 à 10h15)</option>
-                    <option value="Sortie (12h30)">Sortie (12h30)</option>
-                </select>
-                <button class="btn-whatsapp" onclick="envoyer('retrait')">📲 Commander pour Bobokoli</button>
-            </div>
-        </section>
+      <div class="path-selector">
+        <button class="path-card" data-path="eleve">
+          <div class="path-card-check">✓</div>
+          <div class="path-card-icon">🏫</div>
+          <div class="path-card-title">Élève</div>
+          <div class="path-card-desc">Je commande depuis l'école, à récupérer sur place.</div>
+        </button>
+        <button class="path-card" data-path="exterieur">
+          <div class="path-card-check">✓</div>
+          <div class="path-card-icon">🛵</div>
+          <div class="path-card-title">Extérieur</div>
+          <div class="path-card-desc">Je commande depuis chez moi, en livraison.</div>
+        </button>
+      </div>
+    </div>
+  </section>
 
-        <hr class="separator">
+  <div class="container">
 
-        <section id="menu-livraison">
-            <h2 class="title-section">🛵 OPTION LIVRAISON 🛵</h2>
-            
-            <div class="zone-box" style="background: #fff3e0; border-left: 5px solid #ff9800; padding: 15px; margin: 10px; border-radius: 8px; font-size: 0.9em; color: #e65100;">
-                <strong>📍 Zones :</strong> UPN • Cité Verte • Macampagne • Kitambo Magasin
-            </div>
+    <!-- ==================================================================
+         MENU ÉLÈVES (RETRAIT)
+         ================================================================== -->
+    <section id="menu-eleve" class="menu-section">
+      <div class="section-heading">
+        <span class="section-eyebrow">Sur place</span>
+        <h2 class="section-title">🔥 Tarifs élèves (Institut Bobokoli)</h2>
+      </div>
 
-            <div style="background: #fdf2f2; padding: 10px; margin: 10px; border-radius: 8px; border: 1px dashed #c41e16; font-size: 0.85em; text-align: center;">
-                <strong>ℹ️ À SAVOIR :</strong> Garnis de frites, sauce samouraï & fromage.
-            </div>
-            
-            <div class="item">
-                <img src="tacos-viande.jpg" alt="Tacos Viande">
-                <div class="info">
-                    <h3>Tacos Viande Hachée</h3>
-                    <div style="margin-bottom: 8px;">
-                        <label>Taille L (12k) : </label>
-                        <input type="number" id="v-l-qty" value="0" min="0" class="qty-input">
-                    </div>
-                    <div>
-                        <label>Taille XL (24k) : </label>
-                        <input type="number" id="v-xl-qty" value="0" min="0" class="qty-input">
-                    </div>
-                </div>
-            </div>
+      <div class="product-grid"><!-- rempli automatiquement par products-render.js --></div>
 
-            <div class="item">
-                <img src="tacos-poulet.jpg" alt="Tacos Poulet">
-                <div class="info">
-                    <h3>Tacos au Poulet</h3>
-                    <div style="margin-bottom: 8px;">
-                        <label>Taille L (10k) : </label>
-                        <input type="number" id="p-l-qty" value="0" min="0" class="qty-input">
-                    </div>
-                    <div>
-                        <label>Taille XL (20k) : </label>
-                        <input type="number" id="p-xl-qty" value="0" min="0" class="qty-input">
-                    </div>
-                </div>
-            </div>
+      <form class="order-form" onsubmit="return false;">
+        <input type="text" id="nom-eleve" class="field-input" placeholder="Nom et Prénom de l'élève">
+        <input type="text" id="classe" class="field-input" placeholder="Ta Classe">
 
-            <div style="background: white; padding: 15px; margin: 10px; border-radius: 12px; border: 1px solid #ddd;">
-                <h4 style="margin-top:0; color: #c41e16;">🍯 Choix des Sauces (Max 2)</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.85em;">
-                    <label><input type="checkbox" class="sauce" value="Barbeche"> Barbeche</label>
-                    <label><input type="checkbox" class="sauce" value="Algérienne"> Algérienne</label>
-                    <label><input type="checkbox" class="sauce" value="Mayonnaise"> Mayonnaise</label>
-                    <label><input type="checkbox" class="sauce" value="Ketchup"> Ketchup</label>
-                    <label><input type="checkbox" class="sauce" value="Samouraï"> Samouraï</label>
-                    <label><input type="checkbox" class="sauce" value="Piment"> Piment</label>
-                </div>
+        <p class="field-label">Jour de récupération</p>
+        <div class="field-row">
+          <select id="jour-semaine" class="field-select">
+            <option value="Lundi">Lundi</option>
+            <option value="Mardi">Mardi</option>
+            <option value="Mercredi">Mercredi</option>
+            <option value="Jeudi">Jeudi</option>
+            <option value="Vendredi">Vendredi</option>
+            <option value="Samedi">Samedi</option>
+          </select>
+          <input type="number" id="jour-date" class="field-input" placeholder="Jour (ex: 12)">
+          <select id="mois" class="field-select">
+            <option value="Janvier">Janv</option>
+            <option value="Février">Févr</option>
+            <option value="Mars">Mars</option>
+            <option value="Avril">Avril</option>
+            <option value="Mai">Mai</option>
+            <option value="Juin">Juin</option>
+            <option value="Juillet">Juil</option>
+            <option value="Août">Août</option>
+            <option value="Septembre">Sept</option>
+            <option value="Octobre">Oct</option>
+            <option value="Novembre">Nov</option>
+            <option value="Décembre">Déc</option>
+          </select>
+        </div>
 
-                <h4 style="margin-bottom:5px; color: #c41e16; margin-top: 15px;">🧀 Suppléments (+4.000 FC)</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.85em;">
-                    <label><input type="checkbox" class="supp" value="Cheddar"> Cheddar</label>
-                    <label><input type="checkbox" class="supp" value="Oeuf"> Oeuf</label>
-                    <label><input type="checkbox" class="supp" value="Salami"> Salami</label>
-                    <label><input type="checkbox" class="supp" value="Jambon"> Jambon</label>
-                    <label><input type="checkbox" class="supp" value="Vache qui rit"> Vache qui rit</label>
-                    <label><input type="checkbox" class="supp" value="Gouda"> Gouda</label>
-                    <label><input type="checkbox" class="supp" value="Mozarella"> Mozarella</label>
-                    <label><input type="checkbox" class="supp" value="Lardon"> Lardon</label>
-                    <label><input type="checkbox" class="supp" value="Bacon"> Bacon</label>
-                </div>
-            </div>
+        <p class="field-label">Heure de retrait</p>
+        <select id="h-retrait" class="field-select">
+          <option value="Matin (07h10)">Matin (07h10 à 07h30)</option>
+          <option value="Récréation (10h00)">Récréation (10h00 à 10h15)</option>
+          <option value="Sortie (12h30)">Sortie (12h30)</option>
+        </select>
 
-            <div id="fields-livraison">
-                <input type="text" id="nom-livraison" placeholder="Nom pour la livraison">
-                <input type="text" id="commune" placeholder="Commune (ex: Ngaliema)">
-                <input type="text" id="avenue" placeholder="Quartier et Avenue">
-                <input type="text" id="num-maison" placeholder="N° Maison / Réf">
-                
-                <p class="loc-alert">🚀 Frais de livraison : 6.000 FC</p>
-                <button class="btn-whatsapp" style="background: #007bff;" onclick="envoyer('livraison')">🚀 Commander en Livraison</button>
-            </div>
-        </section>
-    </main>
+        <button type="button" class="btn btn-primary" data-order-mode="retrait">📲 Commander pour l'école</button>
+      </form>
+    </section>
 
-    <script>
-        function envoyer(mode) {
-            let message = "";
-            let commande = "";
-            const numero = "243858679024";
-            const anneeActuelle = new Date().getFullYear(); // Récupère 2026, 2027 automatiquement
+    <!-- ==================================================================
+         MENU EXTÉRIEUR (LIVRAISON)
+         ================================================================== -->
+    <section id="menu-exterieur" class="menu-section">
+      <div class="section-heading">
+        <span class="section-eyebrow">Livraison</span>
+        <h2 class="section-title">🛵 Option livraison</h2>
+      </div>
 
-            if (mode === 'retrait') {
-                const nom = document.getElementById('nom-eleve').value;
-                const classe = document.getElementById('classe').value;
-                const jourS = document.getElementById('jour-semaine').value;
-                const jourD = document.getElementById('jour-date').value;
-                const mois = document.getElementById('mois').value;
-                const heure = document.getElementById('h-retrait').value;
-                
-                const qS = document.getElementById('q-std').value;
-                const qC = document.getElementById('q-can').value;
-                const qSp = document.getElementById('q-spag').value;
-                const qB = document.getElementById('q-burger').value;
+      <div class="info-banner">
+        <strong>📍 Zones :</strong>&nbsp;UPN • Cité Verte • Macampagne • Kitambo Magasin
+      </div>
+      <div class="info-banner is-note">
+        <strong>ℹ️ À savoir :</strong>&nbsp;Garnis de frites, sauce samouraï &amp; fromage.
+      </div>
 
-                if(!nom || !jourD) return alert("Remplis ton nom et le numéro du jour !");
-                
-                if(qS > 0) commande += `%0A- ${qS} Tacos Standard`;
-                if(qC > 0) commande += `%0A- ${qC} Em’s yaourt`;
-                if(qSp > 0) commande += `%0A- ${qSp} Spaghetti`;
-                if(qB > 0) commande += `%0A- ${qB} Djo-burger`;
+      <div class="product-grid"><!-- rempli automatiquement par products-render.js --></div>
 
-                // Format final : Lundi 12 Janvier 2026
-                message = `*INSTITUT BOBOKOLI 🏫*%0A👤 ${nom}%0A👥 Classe: ${classe}%0A📅 Date: ${jourS} ${jourD} ${mois} ${anneeActuelle}%0A⏰ Heure: ${heure}%0A%0A*COMMANDE:*${commande}`;
-            } 
-            else {
-                const nom = document.getElementById('nom-livraison').value;
-                const com = document.getElementById('commune').value;
-                const ave = document.getElementById('avenue').value;
-                const num = document.getElementById('num-maison').value;
+      <div class="chip-panel">
+        <p class="chip-panel-title">🍯 Choix des sauces (max 2)</p>
+        <div class="chip-grid"><!-- rempli automatiquement par products-render.js --></div>
 
-                const vlq = document.getElementById('v-l-qty').value;
-                const vxlq = document.getElementById('v-xl-qty').value;
-                const plq = document.getElementById('p-l-qty').value;
-                const pxlq = document.getElementById('p-xl-qty').value;
+        <p class="chip-panel-title">🧀 Suppléments (+4 000 FC)</p>
+        <div class="chip-grid"><!-- rempli automatiquement par products-render.js --></div>
+      </div>
 
-                if(!nom || !com) return alert("Remplis le nom et la commune !");
+      <form class="order-form" onsubmit="return false;">
+        <input type="text" id="nom-livraison" class="field-input" placeholder="Nom pour la livraison">
+        <input type="text" id="commune" class="field-input" placeholder="Commune (ex: Ngaliema)">
+        <input type="text" id="avenue" class="field-input" placeholder="Quartier et Avenue">
+        <input type="text" id="num-maison" class="field-input" placeholder="N° Maison / Réf">
+        <div class="info-banner" data-delivery-fee>🚀 Frais de livraison : 6 000 FC</div>
+        <button type="button" class="btn btn-delivery" data-order-mode="livraison">🚀 Commander en livraison</button>
+      </form>
+    </section>
+  </div>
 
-                if(vlq > 0) commande += `%0A- ${vlq} Tacos Viande L (12k)`;
-                if(vxlq > 0) commande += `%0A- ${vxlq} Tacos Viande XL (24k)`;
-                if(plq > 0) commande += `%0A- ${plq} Tacos Poulet L (10k)`;
-                if(pxlq > 0) commande += `%0A- ${pxlq} Tacos Poulet XL (20k)`;
+  <footer class="app-footer">
+    Malé Tacos © <span id="year"></span>
+  </footer>
+</main>
 
-                let sauces = [];
-                document.querySelectorAll('.sauce:checked').forEach(s => sauces.push(s.value));
-                if(sauces.length > 0) commande += `%0A🍯 *Sauces:* ${sauces.join(', ')}`;
+<!-- ======================================================================
+     BARRE PANIER STICKY
+     ====================================================================== -->
+<div class="cart-bar" id="cartBar">
+  <div class="cart-bar-info">
+    <span class="cart-bar-count" id="cartCount">0 article</span>
+    <span class="cart-bar-total" id="cartTotal">0 FC</span>
+  </div>
+  <span class="cart-bar-cta">Voir la commande ↑</span>
+</div>
 
-                let supps = [];
-                document.querySelectorAll('.supp:checked').forEach(s => supps.push(s.value));
-                if(supps.length > 0) commande += `%0A🧀 *Suppléments:* ${supps.join(', ')}`;
+<!-- ======================================================================
+     TOAST — reprise de commande abandonnée
+     ====================================================================== -->
+<div class="resume-toast" id="resumeToast">
+  <span class="resume-toast-text" id="resumeToastText"></span>
+  <button class="resume-toast-btn" id="resumeBtn">Reprendre</button>
+  <button class="install-banner-close" id="resumeDismiss" aria-label="Fermer">✕</button>
+</div>
 
-                message = `*LIVRAISON DIRECTE 🚀*%0A👤 Nom: ${nom}%0A📍 ${com}, ${ave}%0A🏠 N°: ${num}%0A📍 _J'envoie ma localisation._%0A%0A*COMMANDE:*${commande}`;
-            }
+<!-- ======================================================================
+     BANNIÈRE INSTALLATION PWA
+     ====================================================================== -->
+<div class="install-banner" id="installBanner">
+  <div class="install-banner-text" id="installBannerText">
+    <strong>Installe l'application</strong>
+    Commande plus vite depuis ton écran d'accueil.
+  </div>
+  <button class="install-banner-btn" id="installBtn">Installer</button>
+  <button class="install-banner-close" id="installBannerClose" aria-label="Fermer">✕</button>
+</div>
 
-            if(commande === "") return alert("Ajoute au moins un article !");
-            window.open(`https://wa.me/${numero}?text=${message}`, '_blank');
-        }
-    </script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="js/products-render.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
