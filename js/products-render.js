@@ -41,7 +41,7 @@ function renderSimpleProductCard(product) {
             <button class="qty-btn" data-target="${qtyId}" data-action="dec">–</button>
             <input type="number" id="${qtyId}" value="0" min="0" class="qty-input"
                    inputmode="numeric" data-price="${product.price}"
-                   data-product-id="${product.id}" data-category="eleve">
+                   data-product-id="${product.id}" data-category="eleve" data-name="${product.name}">
             <button class="qty-btn" data-target="${qtyId}" data-action="inc">+</button>
           </div>
         </div>
@@ -60,7 +60,7 @@ function renderVariantProductCard(product) {
           <button class="qty-btn" data-target="${qtyId}" data-action="dec">–</button>
           <input type="number" id="${qtyId}" value="0" min="0" class="qty-input"
                  inputmode="numeric" data-price="${v.price}"
-                 data-product-id="${product.id}" data-variant="${v.size}" data-category="exterieur">
+                 data-product-id="${product.id}" data-variant="${v.size}" data-category="exterieur" data-name="${product.name}">
           <button class="qty-btn" data-target="${qtyId}" data-action="inc">+</button>
         </div>
       </div>`;
@@ -114,9 +114,7 @@ async function initProducts() {
       deliveryBanner.textContent = `🚀 Frais de livraison : ${formatFC(data.deliveryFee)}`;
     }
 
-    // Rend les données brutes disponibles globalement (utile pour app.js)
     window.__MALE_TACOS_PRODUCTS__ = data;
-
     document.dispatchEvent(new CustomEvent('products:ready', { detail: data }));
   } catch (err) {
     console.error('[products-render] Erreur de chargement des produits :', err);
