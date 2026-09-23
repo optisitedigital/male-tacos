@@ -1,0 +1,17 @@
+{
+  "name": "male-tacos-server",
+  "version": "1.0.0",
+  "description": "Serveur Malé Tacos — sert le site et gère le panneau admin (écrit les produits sur GitHub)",
+  "main": "server.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5"
+  }
+}
