@@ -737,3 +737,58 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.15; }
   .cart-bar { left: 50%; transform: translate(-50%, 100%); width: min(90vw, 720px); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
   .cart-bar.is-visible { transform: translate(-50%, 0); }
 }
+/* ==========================================================================
+   HERO PHOTO — classes utilisées dans index.html mais absentes de style.css
+   À coller tout à la fin de css/style.css
+   ========================================================================== */
+.hero-photo {
+  position: relative;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-7) var(--space-4);
+  overflow: hidden;
+  background: var(--color-ink); /* couleur de secours si la photo ne charge pas */
+}
+
+.hero-photo-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.hero-photo-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(28, 25, 23, 0.55) 0%,
+    rgba(28, 25, 23, 0.70) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.hero-title-light { color: #fff; }
+.hero-title-light em { color: #ffb4ae; }
+.hero-subtitle-light { color: rgba(255, 255, 255, 0.88); }
+
+.hero-photo .hero-eyebrow {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+/* Sécurité : aucune image ne peut dépasser son conteneur */
+img { max-width: 100%; height: auto; }
+.brand-logo { width: 36px; height: 36px; }
+.product-card-img { height: 84px; }
+@media (min-width: 640px) { .product-card-img { height: 100px; } }
