@@ -6,112 +6,174 @@ const crypto = require('crypto');
 
 const app = express();
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+/*
+|--------------------------------------------------------------------------
+| CONFIGURATION
+|--------------------------------------------------------------------------
+*/
 
-// Site public + dashboard admin
-app.use(express.static(path.join(__dirname, '..')));
+const PORT = process.env.PORT || 3000;
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_REPO = process.env.GITHUB_REPO;
-const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const GITHUB_REPO =
+  process.env.GITHUB_REPO || 'optisitedigital/male-tacos';
 
-const PRODUCTS_PATH = 'products.json';
-const ADMIN_COOKIE = 'male_tacos_admin';
-const SESSION_DURATION = 12 * 60 * 60 * 1000;
+const GITHUB_BRANCH =
+  process.env.GITHUB_BRANCH || 'main';
 
-// ======================================================
-// OUTILS
-// ======================================================
+const ADMIN_PASSWORD =
+  process.env.ADMIN_PASSWORD;
+
+const PRODUCTS_PATH =
+  'products.json';
+
+const ADMIN_COOKIE =
+  'male_tacos_admin';
+
+const SESSION_DURATION =
+  12 * 60 * 60 * 1000;
+
+/*
+|--------------------------------------------------------------------------
+| EXPRESS
+|--------------------------------------------------------------------------
+*/
+
+app.use(
+  express.json({
+    limit: '12mb'
+  })
+);
+
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: '12mb'
+  })
+);
+
+/*
+|--------------------------------------------------------------------------
+| SERVIR LE SITE
+|--------------------------------------------------------------------------
+*/
+
+app.use(
+  express.static(
+    path.join(__dirname, '..')
+  )
+);
+
+/*
+|--------------------------------------------------------------------------
+| GITHUB HEADERS
+|--------------------------------------------------------------------------
+*/
 
 function githubHeaders() {
   return {
-    Authorization: `Bearer ${GITHUB_TOKEN}`,
-    Accept: 'application/vnd.github+json',
-    'Content-Type': 'application/json',
-    'User-Agent': 'male-tacos-admin'
+    Authorization:
+      `Bearer ${GITHUB_TOKEN}`,
+
+    Accept:
+      'application/vnd.github+json',
+
+    'X-GitHub-Api-Version':
+      '2022-11-28',
+
+    'User-Agent':
+      'male-tacos-admin'
   };
 }
 
-function requireGithubConfig() {
-  if (!GITHUB_TOKEN || !GITHUB_REPO) {
-    throw new Error(
-      'GITHUB_TOKEN ou GITHUB_REPO n’est pas configuré sur Render.'
-    );
-  }
-}
-
-function sanitizeText(value, fallback = '') {
-  if (typeof value !== 'string') return fallback;
-  return value.trim();
-}
-
-function createProductId(name) {
-  const base = sanitizeText(name, 'produit')
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 40);
-
-  return `${base || 'produit'}-${Date.now()}`;
-}
-
-function safeFilename(name) {
-  return sanitizeText(name, 'produit')
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 50);
-}
-
-// ======================================================
-// AUTH ADMIN
-// ======================================================
+/*
+|--------------------------------------------------------------------------
+| AUTHENTIFICATION
+|--------------------------------------------------------------------------
+*/
 
 function createAdminToken() {
-  const timestamp = Date.now().toString();
 
-  const signature = crypto
-    .createHmac('sha256', ADMIN_PASSWORD || '')
-    .update(timestamp)
-    .digest('hex');
+  const timestamp =
+    Date.now().toString();
 
-  return Buffer
-    .from(`${timestamp}.${signature}`)
-    .toString('base64url');
-}
-
-function verifyAdminToken(token) {
-  if (!ADMIN_PASSWORD || !token) return false;
-
-  try {
-    const decoded = Buffer
-      .from(token, 'base64url')
-      .toString('utf8');
-
-    const [timestamp, signature] = decoded.split('.');
-
-    if (!timestamp || !signature) return false;
-
-    const time = Number(timestamp);
-
-    if (!Number.isFinite(time)) return false;
-
-    if (Date.now() - time > SESSION_DURATION) {
-      return false;
-    }
-
-    const expectedSignature = crypto
-      .createHmac('sha256', ADMIN_PASSWORD)
+  const signature =
+    crypto
+      .createHmac(
+        'sha256',
+        ADMIN_PASSWORD || ''
+      )
       .update(timestamp)
       .digest('hex');
 
-    if (signature.length !== expectedSignature.length) {
+  return Buffer
+    .from(
+      `${timestamp}.${signature}`
+    )
+    .toString('base64url');
+}
+
+
+function verifyAdminToken(token) {
+
+  if (
+    !ADMIN_PASSWORD ||
+    !token
+  ) {
+    return false;
+  }
+
+  try {
+
+    const decoded =
+      Buffer
+        .from(
+          token,
+          'base64url'
+        )
+        .toString('utf8');
+
+    const parts =
+      decoded.split('.');
+
+    if (parts.length !== 2) {
+      return false;
+    }
+
+    const [
+      timestamp,
+      signature
+    ] = parts;
+
+    const time =
+      Number(timestamp);
+
+    if (
+      !Number.isFinite(time)
+    ) {
+      return false;
+    }
+
+    if (
+      Date.now() - time >
+      SESSION_DURATION
+    ) {
+      return false;
+    }
+
+    const expectedSignature =
+      crypto
+        .createHmac(
+          'sha256',
+          ADMIN_PASSWORD
+        )
+        .update(timestamp)
+        .digest('hex');
+
+    if (
+      signature.length !==
+      expectedSignature.length
+    ) {
       return false;
     }
 
@@ -119,143 +181,274 @@ function verifyAdminToken(token) {
       Buffer.from(signature),
       Buffer.from(expectedSignature)
     );
+
   } catch {
+
     return false;
+
   }
 }
 
-function getCookie(req, name) {
-  const header = req.headers.cookie;
 
-  if (!header) return null;
+function getCookie(
+  req,
+  name
+) {
 
-  for (const cookie of header.split(';')) {
-    const index = cookie.indexOf('=');
+  const header =
+    req.headers.cookie;
 
-    if (index === -1) continue;
+  if (!header) {
+    return null;
+  }
 
-    const key = cookie.slice(0, index).trim();
-    const value = cookie.slice(index + 1).trim();
+  const cookies =
+    header.split(';');
+
+  for (
+    const cookie of cookies
+  ) {
+
+    const index =
+      cookie.indexOf('=');
+
+    if (index === -1) {
+      continue;
+    }
+
+    const key =
+      cookie
+        .slice(0, index)
+        .trim();
+
+    const value =
+      cookie
+        .slice(index + 1)
+        .trim();
 
     if (key === name) {
-      return decodeURIComponent(value);
+
+      return decodeURIComponent(
+        value
+      );
+
     }
   }
 
   return null;
 }
 
-function checkAdmin(req, res, next) {
+
+function checkAdmin(
+  req,
+  res,
+  next
+) {
+
   if (!ADMIN_PASSWORD) {
+
     return res.status(500).json({
-      error: 'ADMIN_PASSWORD non configuré sur Render.'
+      ok: false,
+      error:
+        'ADMIN_PASSWORD non configuré sur Render.'
     });
+
   }
 
-  const token = getCookie(req, ADMIN_COOKIE);
+  const token =
+    getCookie(
+      req,
+      ADMIN_COOKIE
+    );
 
-  if (!verifyAdminToken(token)) {
+  if (
+    !verifyAdminToken(token)
+  ) {
+
     return res.status(401).json({
-      error: 'Session administrateur expirée ou invalide.'
+      ok: false,
+      error:
+        'Session administrateur expirée ou invalide.'
     });
+
   }
 
   next();
 }
 
-// ======================================================
-// LOGIN
-// ======================================================
+/*
+|--------------------------------------------------------------------------
+| LOGIN
+|--------------------------------------------------------------------------
+*/
 
-app.post('/api/admin/login', (req, res) => {
-  const { password } = req.body || {};
+app.post(
+  '/api/admin/login',
+  (req, res) => {
 
-  if (!ADMIN_PASSWORD) {
-    return res.status(500).json({
-      ok: false,
-      error: 'ADMIN_PASSWORD non configuré sur Render.'
+    const {
+      password
+    } = req.body || {};
+
+    if (!ADMIN_PASSWORD) {
+
+      return res.status(500).json({
+        ok: false,
+        error:
+          'ADMIN_PASSWORD non configuré sur Render.'
+      });
+
+    }
+
+    if (
+      typeof password !== 'string' ||
+      password.length === 0 ||
+      password !== ADMIN_PASSWORD
+    ) {
+
+      return res.status(401).json({
+        ok: false,
+        error:
+          'Mot de passe incorrect.'
+      });
+
+    }
+
+    const token =
+      createAdminToken();
+
+    const secure =
+      process.env.NODE_ENV === 'production'
+        ? '; Secure'
+        : '';
+
+    res.setHeader(
+      'Set-Cookie',
+      `${ADMIN_COOKIE}=${encodeURIComponent(token)}; HttpOnly; Path=/; Max-Age=${SESSION_DURATION / 1000}; SameSite=Lax${secure}`
+    );
+
+    res.json({
+      ok: true
     });
-  }
 
-  if (
-    typeof password !== 'string' ||
-    password !== ADMIN_PASSWORD
-  ) {
-    return res.status(401).json({
-      ok: false,
-      error: 'Mot de passe incorrect.'
+  }
+);
+
+/*
+|--------------------------------------------------------------------------
+| LOGOUT
+|--------------------------------------------------------------------------
+*/
+
+app.post(
+  '/api/admin/logout',
+  (req, res) => {
+
+    res.setHeader(
+      'Set-Cookie',
+      `${ADMIN_COOKIE}=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax`
+    );
+
+    res.json({
+      ok: true
     });
+
   }
+);
 
-  const token = createAdminToken();
+/*
+|--------------------------------------------------------------------------
+| SESSION
+|--------------------------------------------------------------------------
+*/
 
-  const secure =
-    process.env.NODE_ENV === 'production'
-      ? '; Secure'
-      : '';
+app.get(
+  '/api/admin/session',
+  checkAdmin,
+  (req, res) => {
 
-  res.setHeader(
-    'Set-Cookie',
-    `${ADMIN_COOKIE}=${encodeURIComponent(token)}; HttpOnly; Path=/; Max-Age=${SESSION_DURATION / 1000}; SameSite=Lax${secure}`
-  );
+    res.json({
+      ok: true
+    });
 
-  res.json({
-    ok: true
-  });
-});
+  }
+);
 
-// ======================================================
-// LOGOUT
-// ======================================================
-
-app.post('/api/admin/logout', (req, res) => {
-  res.setHeader(
-    'Set-Cookie',
-    `${ADMIN_COOKIE}=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax`
-  );
-
-  res.json({
-    ok: true
-  });
-});
-
-// ======================================================
-// SESSION
-// ======================================================
-
-app.get('/api/admin/session', checkAdmin, (req, res) => {
-  res.json({
-    ok: true
-  });
-});
-
-// ======================================================
-// GITHUB — LIRE PRODUCTS.JSON
-// ======================================================
+/*
+|--------------------------------------------------------------------------
+| GITHUB : LIRE PRODUCTS.JSON
+|--------------------------------------------------------------------------
+*/
 
 async function getProductsFile() {
-  requireGithubConfig();
+
+  if (
+    !GITHUB_TOKEN ||
+    !GITHUB_REPO
+  ) {
+
+    throw new Error(
+      'GITHUB_TOKEN ou GITHUB_REPO non configuré.'
+    );
+
+  }
 
   const url =
     `https://api.github.com/repos/${GITHUB_REPO}/contents/${PRODUCTS_PATH}?ref=${encodeURIComponent(GITHUB_BRANCH)}`;
 
-  const response = await fetch(url, {
-    headers: githubHeaders()
-  });
+  const response =
+    await fetch(
+      url,
+      {
+        method: 'GET',
+        headers:
+          githubHeaders()
+      }
+    );
+
+  const data =
+    await response.json();
 
   if (!response.ok) {
-    const text = await response.text();
 
     throw new Error(
-      `Impossible de lire products.json (${response.status}) : ${text}`
+      data.message ||
+      `Impossible de lire products.json (${response.status}).`
     );
+
   }
 
-  const data = await response.json();
+  if (
+    !data.content
+  ) {
 
-  const content = JSON.parse(
-    Buffer.from(data.content, 'base64').toString('utf8')
-  );
+    throw new Error(
+      'GitHub n’a pas retourné le contenu de products.json.'
+    );
+
+  }
+
+  let content;
+
+  try {
+
+    content =
+      JSON.parse(
+        Buffer
+          .from(
+            data.content.replace(/\n/g, ''),
+            'base64'
+          )
+          .toString('utf8')
+      );
+
+  } catch {
+
+    throw new Error(
+      'products.json contient un JSON invalide.'
+    );
+
+  }
 
   return {
     content,
@@ -263,342 +456,728 @@ async function getProductsFile() {
   };
 }
 
-// ======================================================
-// GITHUB — SAUVER PRODUCTS.JSON
-// ======================================================
+/*
+|--------------------------------------------------------------------------
+| GITHUB : SAUVEGARDER PRODUCTS.JSON
+|--------------------------------------------------------------------------
+*/
 
-async function saveProductsFile(content, sha, message) {
-  requireGithubConfig();
+async function saveProductsFile(
+  newContent,
+  sha,
+  message
+) {
 
   const url =
     `https://api.github.com/repos/${GITHUB_REPO}/contents/${PRODUCTS_PATH}`;
 
   const body = {
+
     message:
       message ||
-      'Mise à jour du menu via le dashboard Malé Tacos',
+      'Mise à jour Malé Tacos',
 
-    content: Buffer
-      .from(JSON.stringify(content, null, 2))
-      .toString('base64'),
+    content:
+      Buffer
+        .from(
+          JSON.stringify(
+            newContent,
+            null,
+            2
+          ),
+          'utf8'
+        )
+        .toString('base64'),
 
     sha,
-    branch: GITHUB_BRANCH
+
+    branch:
+      GITHUB_BRANCH
+
   };
 
-  const response = await fetch(url, {
-    method: 'PUT',
-    headers: githubHeaders(),
-    body: JSON.stringify(body)
-  });
+  const response =
+    await fetch(
+      url,
+      {
+        method: 'PUT',
+
+        headers: {
+          ...githubHeaders(),
+          'Content-Type':
+            'application/json'
+        },
+
+        body:
+          JSON.stringify(body)
+      }
+    );
+
+  const data =
+    await response.json();
 
   if (!response.ok) {
-    const text = await response.text();
 
     throw new Error(
-      `Erreur GitHub products.json (${response.status}) : ${text}`
+      data.message ||
+      `Erreur GitHub (${response.status}).`
     );
+
   }
 
-  return response.json();
+  return data;
 }
 
-// ======================================================
-// GITHUB — UPLOAD IMAGE
-// ======================================================
+/*
+|--------------------------------------------------------------------------
+| VALIDATION PRODUCTS.JSON
+|--------------------------------------------------------------------------
+*/
 
-async function uploadImageToGithub({
-  base64,
-  mimeType,
-  productName
-}) {
-  requireGithubConfig();
+function validateProductsStructure(
+  content
+) {
 
-  if (!base64) {
-    throw new Error('Aucune image reçue.');
-  }
-
-  if (!['image/jpeg', 'image/png', 'image/webp'].includes(mimeType)) {
-    throw new Error(
-      'Format image non supporté. Utilise JPG, PNG ou WebP.'
-    );
-  }
-
-  const extension =
-    mimeType === 'image/png'
-      ? 'png'
-      : mimeType === 'image/webp'
-        ? 'webp'
-        : 'jpg';
-
-  const filename =
-    `${safeFilename(productName) || 'produit'}-${Date.now()}.${extension}`;
-
-  const githubPath = `images/products/${filename}`;
-
-  const cleanBase64 = base64.includes(',')
-    ? base64.split(',')[1]
-    : base64;
-
-  const buffer = Buffer.from(cleanBase64, 'base64');
-
-  if (!buffer.length) {
-    throw new Error('Image vide ou invalide.');
-  }
-
-  // Sécurité : éviter les images énormes
-  if (buffer.length > 7 * 1024 * 1024) {
-    throw new Error(
-      'Image trop lourde. Choisis une image plus légère.'
-    );
-  }
-
-  const url =
-    `https://api.github.com/repos/${GITHUB_REPO}/contents/${githubPath}`;
-
-  const body = {
-    message: `Ajout image produit: ${productName}`,
-    content: buffer.toString('base64'),
-    branch: GITHUB_BRANCH
-  };
-
-  const response = await fetch(url, {
-    method: 'PUT',
-    headers: githubHeaders(),
-    body: JSON.stringify(body)
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
+  if (
+    !content ||
+    typeof content !== 'object' ||
+    Array.isArray(content)
+  ) {
 
     throw new Error(
-      `Impossible d'envoyer l'image sur GitHub (${response.status}) : ${text}`
+      'Structure de products.json invalide.'
     );
+
   }
 
-  return filename;
-}
+  if (
+    !Array.isArray(content.eleve)
+  ) {
 
-// ======================================================
-// VALIDATION
-// ======================================================
+    throw new Error(
+      'La section "eleve" doit être un tableau.'
+    );
 
-function validateProductsStructure(content) {
-  if (!content || typeof content !== 'object') {
-    throw new Error('Structure products.json invalide.');
   }
 
-  if (!Array.isArray(content.eleve)) {
-    throw new Error('La section eleve doit être un tableau.');
+  if (
+    !Array.isArray(content.exterieur)
+  ) {
+
+    throw new Error(
+      'La section "exterieur" doit être un tableau.'
+    );
+
   }
 
-  if (!Array.isArray(content.exterieur)) {
-    throw new Error('La section exterieur doit être un tableau.');
+  if (
+    !Array.isArray(content.sauces)
+  ) {
+
+    throw new Error(
+      'La section "sauces" doit être conservée.'
+    );
+
   }
 
-  if (!Array.isArray(content.sauces)) {
-    throw new Error('La section sauces doit être conservée.');
-  }
+  if (
+    !Array.isArray(content.supplements)
+  ) {
 
-  if (!Array.isArray(content.supplements)) {
-    throw new Error('La section supplements doit être conservée.');
+    throw new Error(
+      'La section "supplements" doit être conservée.'
+    );
+
   }
 
   if (
     typeof content.deliveryFee !== 'number' ||
-    !Number.isFinite(content.deliveryFee)
+    !Number.isFinite(
+      content.deliveryFee
+    )
   ) {
-    throw new Error('deliveryFee invalide.');
+
+    throw new Error(
+      'deliveryFee invalide.'
+    );
+
   }
+
 }
 
-function validateEleveProduct(body) {
-  const name = sanitizeText(body.name);
-  const image = sanitizeText(body.image);
-  const price = Number(body.price);
+/*
+|--------------------------------------------------------------------------
+| OUTILS
+|--------------------------------------------------------------------------
+*/
 
-  if (!name) {
-    throw new Error('Le nom du produit est obligatoire.');
+function sanitizeText(
+  value,
+  fallback = ''
+) {
+
+  if (
+    typeof value !== 'string'
+  ) {
+
+    return fallback;
+
   }
 
-  if (!image) {
-    throw new Error('La photo du produit est obligatoire.');
+  return value.trim();
+}
+
+
+function createProductId(
+  name
+) {
+
+  const base =
+    sanitizeText(
+      name,
+      'produit'
+    )
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(
+        /[\u0300-\u036f]/g,
+        ''
+      )
+      .replace(
+        /[^a-z0-9]+/g,
+        '-'
+      )
+      .replace(
+        /^-+|-+$/g,
+        ''
+      )
+      .slice(
+        0,
+        40
+      );
+
+  return `${
+    base || 'produit'
+  }-${Date.now()}`;
+
+}
+
+
+function validateImageData(
+  imageData
+) {
+
+  if (
+    !imageData
+  ) {
+
+    return null;
+
   }
 
-  if (!Number.isFinite(price) || price < 0) {
-    throw new Error('Le prix est invalide.');
+  if (
+    typeof imageData !== 'string'
+  ) {
+
+    throw new Error(
+      'Image invalide.'
+    );
+
+  }
+
+  const match =
+    imageData.match(
+      /^data:image\/(jpeg|jpg|png|webp);base64,(.+)$/
+    );
+
+  if (!match) {
+
+    throw new Error(
+      'Format image non supporté.'
+    );
+
+  }
+
+  const mime =
+    match[1]
+      .toLowerCase();
+
+  const base64 =
+    match[2];
+
+  const buffer =
+    Buffer.from(
+      base64,
+      'base64'
+    );
+
+  /*
+   * Limite de sécurité :
+   * 2 MB maximum après compression.
+   */
+
+  if (
+    buffer.length >
+    2 * 1024 * 1024
+  ) {
+
+    throw new Error(
+      'Image trop lourde. Maximum 2 Mo.'
+    );
+
+  }
+
+  let extension =
+    mime;
+
+  if (
+    extension === 'jpeg' ||
+    extension === 'jpg'
+  ) {
+
+    extension = 'jpg';
+
   }
 
   return {
-    name,
-    price,
-    image
+    buffer,
+    extension
   };
+
 }
 
-function validateExterieurProduct(body) {
-  const name = sanitizeText(body.name);
-  const image = sanitizeText(body.image);
 
-  const priceL = Number(body.priceL);
-  const priceXL = Number(body.priceXL);
+function createImageFileName(
+  name
+) {
 
-  if (!name) {
-    throw new Error('Le nom du produit est obligatoire.');
+  const clean =
+    sanitizeText(
+      name,
+      'produit'
+    )
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(
+        /[\u0300-\u036f]/g,
+        ''
+      )
+      .replace(
+        /[^a-z0-9]+/g,
+        '-'
+      )
+      .replace(
+        /^-+|-+$/g,
+        ''
+      )
+      .slice(
+        0,
+        40
+      );
+
+  return `${clean || 'produit'}-${Date.now()}.jpg`;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| GITHUB : UPLOAD IMAGE
+|--------------------------------------------------------------------------
+*/
+
+async function uploadImageToGitHub(
+  imageData,
+  productName
+) {
+
+  const parsed =
+    validateImageData(
+      imageData
+    );
+
+  if (!parsed) {
+    return null;
   }
 
-  if (!image) {
-    throw new Error('La photo du produit est obligatoire.');
-  }
+  /*
+   * Toutes les nouvelles images
+   * seront stockées à la racine
+   * du repository.
+   */
 
-  if (!Number.isFinite(priceL) || priceL < 0) {
-    throw new Error('Le prix L est invalide.');
-  }
+  const fileName =
+    createImageFileName(
+      productName
+    );
 
-  if (!Number.isFinite(priceXL) || priceXL < 0) {
-    throw new Error('Le prix XL est invalide.');
-  }
+  const imagePath =
+    fileName;
 
-  return {
-    name,
-    image,
-    variants: [
+  const url =
+    `https://api.github.com/repos/${GITHUB_REPO}/contents/${encodeURIComponent(imagePath)}`;
+
+  const body = {
+
+    message:
+      `Ajout image produit: ${productName}`,
+
+    content:
+      parsed.buffer.toString(
+        'base64'
+      ),
+
+    branch:
+      GITHUB_BRANCH
+
+  };
+
+  const response =
+    await fetch(
+      url,
       {
-        size: 'L',
-        price: priceL
-      },
-      {
-        size: 'XL',
-        price: priceXL
+        method: 'PUT',
+
+        headers: {
+          ...githubHeaders(),
+          'Content-Type':
+            'application/json'
+        },
+
+        body:
+          JSON.stringify(body)
       }
-    ]
-  };
+    );
+
+  const data =
+    await response.json();
+
+  if (!response.ok) {
+
+    throw new Error(
+      data.message ||
+      `Impossible d'envoyer l'image (${response.status}).`
+    );
+
+  }
+
+  /*
+   * products.json doit contenir
+   * le nom relatif de l'image.
+   *
+   * Exemple :
+   * tacos-poulet-123456.jpg
+   */
+
+  return fileName;
+
 }
 
-// ======================================================
-// API PUBLIQUE
-// ======================================================
+/*
+|--------------------------------------------------------------------------
+| API PUBLIQUE
+|--------------------------------------------------------------------------
+*/
 
-app.get('/api/products', async (req, res) => {
-  try {
-    const { content } = await getProductsFile();
+app.get(
+  '/api/products',
+  async (req, res) => {
 
-    res.setHeader('Cache-Control', 'no-store');
+    try {
 
-    res.json(content);
-  } catch (error) {
-    console.error(error);
+      const {
+        content
+      } =
+        await getProductsFile();
 
-    res.status(500).json({
-      error: 'Impossible de charger les produits.'
-    });
+      res.setHeader(
+        'Cache-Control',
+        'no-store'
+      );
+
+      res.json(
+        content
+      );
+
+    } catch (error) {
+
+      console.error(
+        error
+      );
+
+      res.status(500).json({
+        error:
+          'Impossible de charger les produits.'
+      });
+
+    }
+
   }
-});
+);
 
-// ======================================================
-// ADMIN — LIRE PRODUITS
-// ======================================================
+/*
+|--------------------------------------------------------------------------
+| ADMIN : LECTURE
+|--------------------------------------------------------------------------
+*/
 
 app.get(
   '/api/admin/products',
   checkAdmin,
   async (req, res) => {
-    try {
-      const { content } = await getProductsFile();
 
-      validateProductsStructure(content);
+    try {
+
+      const {
+        content
+      } =
+        await getProductsFile();
 
       res.json({
         ok: true,
-        products: content
+        products:
+          content
       });
+
     } catch (error) {
-      console.error(error);
+
+      console.error(
+        error
+      );
 
       res.status(500).json({
-        error: error.message
+        ok: false,
+        error:
+          error.message
       });
+
     }
+
   }
 );
 
-// ======================================================
-// ADMIN — AJOUT PRODUIT
-// ======================================================
+/*
+|--------------------------------------------------------------------------
+| ADMIN : AJOUTER
+|--------------------------------------------------------------------------
+*/
 
 app.post(
   '/api/admin/products/:category',
   checkAdmin,
   async (req, res) => {
-    try {
-      const { category } = req.params;
 
-      if (!['eleve', 'exterieur'].includes(category)) {
+    try {
+
+      const {
+        category
+      } = req.params;
+
+      if (
+        ![
+          'eleve',
+          'exterieur'
+        ].includes(category)
+      ) {
+
         return res.status(400).json({
-          error: 'Catégorie invalide.'
+          ok: false,
+          error:
+            'Catégorie invalide.'
         });
+
       }
 
-      const { content, sha } =
+      const {
+        content,
+        sha
+      } =
         await getProductsFile();
 
-      validateProductsStructure(content);
+      validateProductsStructure(
+        content
+      );
+
+      const body =
+        req.body || {};
+
+      const name =
+        sanitizeText(
+          body.name
+        );
+
+      if (!name) {
+
+        return res.status(400).json({
+          ok: false,
+          error:
+            'Le nom du produit est obligatoire.'
+        });
+
+      }
+
+      /*
+       * IMAGE
+       *
+       * Si une nouvelle image
+       * est envoyée, elle est
+       * d'abord sauvegardée
+       * sur GitHub.
+       */
+
+      let image =
+        sanitizeText(
+          body.image
+        );
+
+      if (
+        body.imageData
+      ) {
+
+        image =
+          await uploadImageToGitHub(
+            body.imageData,
+            name
+          );
+
+      }
+
+      if (!image) {
+
+        return res.status(400).json({
+          ok: false,
+          error:
+            'La photo du produit est obligatoire.'
+        });
+
+      }
 
       let product;
 
-      // ------------------------------
-      // INSTITUT BOBOKOLI
-      // ------------------------------
+      /*
+       * INSTITUT
+       */
 
-      if (category === 'eleve') {
-        let image = sanitizeText(req.body.image);
+      if (
+        category === 'eleve'
+      ) {
 
-        if (req.body.imageData) {
-          image = await uploadImageToGithub({
-            base64: req.body.imageData,
-            mimeType: req.body.imageMimeType,
-            productName: req.body.name
+        const price =
+          Number(
+            body.price
+          );
+
+        if (
+          !Number.isFinite(price) ||
+          price < 0
+        ) {
+
+          return res.status(400).json({
+            ok: false,
+            error:
+              'Le prix est invalide.'
           });
+
         }
 
-        product = validateEleveProduct({
-          ...req.body,
-          image
-        });
-
         product = {
-          id: createProductId(product.name),
-          ...product
+
+          id:
+            createProductId(
+              name
+            ),
+
+          name,
+
+          price,
+
+          image
+
         };
+
       }
 
-      // ------------------------------
-      // LIVRAISON / EXTÉRIEUR
-      // ------------------------------
+      /*
+       * EXTÉRIEUR
+       */
 
-      if (category === 'exterieur') {
-        let image = sanitizeText(req.body.image);
+      if (
+        category === 'exterieur'
+      ) {
 
-        if (req.body.imageData) {
-          image = await uploadImageToGithub({
-            base64: req.body.imageData,
-            mimeType: req.body.imageMimeType,
-            productName: req.body.name
+        const priceL =
+          Number(
+            body.priceL
+          );
+
+        const priceXL =
+          Number(
+            body.priceXL
+          );
+
+        if (
+          !Number.isFinite(
+            priceL
+          ) ||
+          priceL < 0
+        ) {
+
+          return res.status(400).json({
+            ok: false,
+            error:
+              'Le prix L est invalide.'
           });
+
         }
 
-        product = validateExterieurProduct({
-          ...req.body,
-          image
-        });
+        if (
+          !Number.isFinite(
+            priceXL
+          ) ||
+          priceXL < 0
+        ) {
+
+          return res.status(400).json({
+            ok: false,
+            error:
+              'Le prix XL est invalide.'
+          });
+
+        }
 
         product = {
-          id: createProductId(product.name),
-          ...product
+
+          id:
+            createProductId(
+              name
+            ),
+
+          name,
+
+          image,
+
+          variants: [
+
+            {
+              size: 'L',
+              price: priceL
+            },
+
+            {
+              size: 'XL',
+              price: priceXL
+            }
+
+          ]
+
         };
+
       }
 
-      content[category].push(product);
+      content[
+        category
+      ].push(
+        product
+      );
 
       await saveProductsFile(
         content,
@@ -607,95 +1186,288 @@ app.post(
       );
 
       res.json({
+
         ok: true,
-        products: content,
-        message: 'Produit ajouté avec succès.'
+
+        products:
+          content,
+
+        message:
+          'Produit ajouté avec succès.'
+
       });
+
     } catch (error) {
-      console.error(error);
+
+      console.error(
+        error
+      );
 
       res.status(500).json({
-        error: error.message
+
+        ok: false,
+
+        error:
+          error.message
+
       });
+
     }
+
   }
 );
 
-// ======================================================
-// ADMIN — MODIFICATION
-// ======================================================
+/*
+|--------------------------------------------------------------------------
+| ADMIN : MODIFIER
+|--------------------------------------------------------------------------
+*/
 
 app.put(
   '/api/admin/products/:category/:id',
   checkAdmin,
   async (req, res) => {
-    try {
-      const { category, id } = req.params;
 
-      if (!['eleve', 'exterieur'].includes(category)) {
+    try {
+
+      const {
+        category,
+        id
+      } = req.params;
+
+      if (
+        ![
+          'eleve',
+          'exterieur'
+        ].includes(category)
+      ) {
+
         return res.status(400).json({
-          error: 'Catégorie invalide.'
+          ok: false,
+          error:
+            'Catégorie invalide.'
         });
+
       }
 
-      const { content, sha } =
+      const {
+        content,
+        sha
+      } =
         await getProductsFile();
 
-      validateProductsStructure(content);
+      validateProductsStructure(
+        content
+      );
 
       const index =
-        content[category].findIndex(
-          product => product.id === id
+        content[
+          category
+        ].findIndex(
+          product =>
+            product.id === id
         );
 
-      if (index === -1) {
+      if (
+        index === -1
+      ) {
+
         return res.status(404).json({
-          error: 'Produit introuvable.'
+          ok: false,
+          error:
+            'Produit introuvable.'
         });
+
       }
 
-      const oldProduct = content[category][index];
+      const oldProduct =
+        content[
+          category
+        ][index];
+
+      const body =
+        req.body || {};
+
+      const name =
+        sanitizeText(
+          body.name
+        );
+
+      if (!name) {
+
+        return res.status(400).json({
+          ok: false,
+          error:
+            'Le nom du produit est obligatoire.'
+        });
+
+      }
+
+      /*
+       * IMAGE
+       *
+       * Sans nouvelle image :
+       * on conserve l'ancienne.
+       *
+       * Avec nouvelle image :
+       * on upload la nouvelle.
+       */
 
       let image =
-        sanitizeText(req.body.image) ||
         oldProduct.image;
 
-      // Nouvelle photo choisie
-      if (req.body.imageData) {
-        image = await uploadImageToGithub({
-          base64: req.body.imageData,
-          mimeType: req.body.imageMimeType,
-          productName: req.body.name
+      if (
+        body.imageData
+      ) {
+
+        image =
+          await uploadImageToGitHub(
+            body.imageData,
+            name
+          );
+
+      }
+
+      if (
+        body.image
+      ) {
+
+        image =
+          sanitizeText(
+            body.image
+          );
+
+      }
+
+      if (!image) {
+
+        return res.status(400).json({
+          ok: false,
+          error:
+            'La photo du produit est obligatoire.'
         });
+
       }
 
       let updatedProduct;
 
-      if (category === 'eleve') {
-        const validated =
-          validateEleveProduct({
-            ...req.body,
-            image
+      /*
+       * INSTITUT
+       */
+
+      if (
+        category === 'eleve'
+      ) {
+
+        const price =
+          Number(
+            body.price
+          );
+
+        if (
+          !Number.isFinite(
+            price
+          ) ||
+          price < 0
+        ) {
+
+          return res.status(400).json({
+            ok: false,
+            error:
+              'Le prix est invalide.'
           });
 
-        updatedProduct = {
-          id,
-          ...validated
-        };
-      } else {
-        const validated =
-          validateExterieurProduct({
-            ...req.body,
-            image
-          });
+        }
 
         updatedProduct = {
+
           id,
-          ...validated
+
+          name,
+
+          price,
+
+          image
+
         };
+
       }
 
-      content[category][index] =
+      /*
+       * EXTÉRIEUR
+       */
+
+      else {
+
+        const priceL =
+          Number(
+            body.priceL
+          );
+
+        const priceXL =
+          Number(
+            body.priceXL
+          );
+
+        if (
+          !Number.isFinite(
+            priceL
+          ) ||
+          priceL < 0
+        ) {
+
+          return res.status(400).json({
+            ok: false,
+            error:
+              'Le prix L est invalide.'
+          });
+
+        }
+
+        if (
+          !Number.isFinite(
+            priceXL
+          ) ||
+          priceXL < 0
+        ) {
+
+          return res.status(400).json({
+            ok: false,
+            error:
+              'Le prix XL est invalide.'
+          });
+
+        }
+
+        updatedProduct = {
+
+          id,
+
+          name,
+
+          image,
+
+          variants: [
+
+            {
+              size: 'L',
+              price: priceL
+            },
+
+            {
+              size: 'XL',
+              price: priceXL
+            }
+
+          ]
+
+        };
+
+      }
+
+      content[
+        category
+      ][index] =
         updatedProduct;
 
       await saveProductsFile(
@@ -705,97 +1477,230 @@ app.put(
       );
 
       res.json({
+
         ok: true,
-        products: content,
-        message: 'Produit modifié avec succès.'
+
+        products:
+          content,
+
+        message:
+          'Produit modifié avec succès.'
+
       });
+
     } catch (error) {
-      console.error(error);
+
+      console.error(
+        error
+      );
 
       res.status(500).json({
-        error: error.message
+
+        ok: false,
+
+        error:
+          error.message
+
       });
+
     }
+
   }
 );
 
-// ======================================================
-// ADMIN — SUPPRESSION
-// ======================================================
+/*
+|--------------------------------------------------------------------------
+| ADMIN : SUPPRIMER
+|--------------------------------------------------------------------------
+*/
 
 app.delete(
   '/api/admin/products/:category/:id',
   checkAdmin,
   async (req, res) => {
-    try {
-      const { category, id } = req.params;
 
-      if (!['eleve', 'exterieur'].includes(category)) {
+    try {
+
+      const {
+        category,
+        id
+      } = req.params;
+
+      if (
+        ![
+          'eleve',
+          'exterieur'
+        ].includes(category)
+      ) {
+
         return res.status(400).json({
-          error: 'Catégorie invalide.'
+          ok: false,
+          error:
+            'Catégorie invalide.'
         });
+
       }
 
-      const { content, sha } =
+      const {
+        content,
+        sha
+      } =
         await getProductsFile();
 
-      validateProductsStructure(content);
+      validateProductsStructure(
+        content
+      );
 
-      const existingProduct =
-        content[category].find(
-          product => product.id === id
+      const product =
+        content[
+          category
+        ].find(
+          p => p.id === id
         );
 
-      if (!existingProduct) {
+      if (!product) {
+
         return res.status(404).json({
-          error: 'Produit introuvable.'
+          ok: false,
+          error:
+            'Produit introuvable.'
         });
+
       }
 
-      content[category] =
-        content[category].filter(
-          product => product.id !== id
+      content[
+        category
+      ] =
+        content[
+          category
+        ].filter(
+          p => p.id !== id
         );
 
       await saveProductsFile(
         content,
         sha,
-        `Suppression produit ${category}: ${existingProduct.name}`
+        `Suppression produit ${category}: ${product.name}`
       );
 
       res.json({
+
         ok: true,
-        products: content,
-        message: 'Produit supprimé avec succès.'
+
+        products:
+          content,
+
+        message:
+          'Produit supprimé avec succès.'
+
       });
+
     } catch (error) {
-      console.error(error);
+
+      console.error(
+        error
+      );
 
       res.status(500).json({
-        error: error.message
+
+        ok: false,
+
+        error:
+          error.message
+
       });
+
     }
+
   }
 );
 
-// ======================================================
-// ROUTE ADMIN
-// ======================================================
+/*
+|--------------------------------------------------------------------------
+| ADMIN.HTML
+|--------------------------------------------------------------------------
+*/
 
-app.get('/admin', (req, res) => {
-  res.sendFile(
-    path.join(__dirname, '..', 'admin.html')
-  );
-});
+app.get(
+  '/admin',
+  (req, res) => {
 
-// ======================================================
-// SERVEUR
-// ======================================================
+    res.sendFile(
+      path.join(
+        __dirname,
+        '..',
+        'admin.html'
+      )
+    );
 
-const PORT = process.env.PORT || 3000;
+  }
+);
 
-app.listen(PORT, () => {
-  console.log(
-    `Malé Tacos server prêt sur le port ${PORT}`
-  );
-});
+/*
+|--------------------------------------------------------------------------
+| TEST SERVEUR
+|--------------------------------------------------------------------------
+*/
+
+app.get(
+  '/',
+  (req, res) => {
+
+    res.sendFile(
+      path.join(
+        __dirname,
+        '..',
+        'index.html'
+      )
+    );
+
+  }
+);
+
+/*
+|--------------------------------------------------------------------------
+| 404 API
+|--------------------------------------------------------------------------
+*/
+
+app.use(
+  '/api',
+  (req, res) => {
+
+    res.status(404).json({
+      ok: false,
+      error:
+        'Route API introuvable.'
+    });
+
+  }
+);
+
+/*
+|--------------------------------------------------------------------------
+| DÉMARRAGE
+|--------------------------------------------------------------------------
+*/
+
+app.listen(
+  PORT,
+  () => {
+
+    console.log(
+      `Malé Tacos server prêt sur le port ${PORT}`
+    );
+
+    console.log(
+      `Repository GitHub: ${GITHUB_REPO}`
+    );
+
+    console.log(
+      `Branche: ${GITHUB_BRANCH}`
+    );
+
+    console.log(
+      `Products: ${PRODUCTS_PATH}`
+    );
+
+  }
+);
