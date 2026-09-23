@@ -2,9 +2,9 @@
   "name": "Malé Tacos",
   "short_name": "Malé Tacos",
   "description": "Commande tes tacos et snacks à l'Institut Bobokoli ou en livraison à domicile.",
-  "start_url": "/male-tacos/?source=pwa",
-  "scope": "/male-tacos/",
-  "id": "/male-tacos/",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "id": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#ffffff",
@@ -12,25 +12,25 @@
   "lang": "fr",
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-192-maskable.png",
+      "src": "icon-192-maskable.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-512-maskable.png",
+      "src": "icon-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
