@@ -8,41 +8,39 @@
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
 
-  <title>Administration — Malé Tacos</title>
+  <title>Admin — Malé Tacos</title>
 
   <meta
-    name="description"
-    content="Administration du catalogue Malé Tacos"
+    name="robots"
+    content="noindex,nofollow"
   >
-
-  <meta name="robots" content="noindex,nofollow">
 
   <style>
     :root {
       --red: #c41e16;
       --red-dark: #9c1710;
-      --red-soft: #fdf2f2;
+      --red-light: #fff1ef;
+
+      --orange: #ff9800;
 
       --black: #171414;
-      --text: #24201f;
-      --muted: #716b68;
+      --text: #252120;
+      --muted: #756f6c;
 
       --white: #ffffff;
-      --background: #f7f5f3;
-      --border: #e8e2de;
+      --bg: #f6f4f2;
+      --border: #e5dfdb;
 
-      --green: #18864b;
-      --green-soft: #eaf8f0;
+      --green: #17864b;
+      --green-light: #eaf8f0;
 
       --danger: #c62828;
-      --danger-soft: #fff0f0;
+      --danger-light: #fff0f0;
 
-      --shadow-sm: 0 2px 10px rgba(23, 20, 20, .06);
-      --shadow-md: 0 12px 30px rgba(23, 20, 20, .09);
+      --shadow:
+        0 10px 30px rgba(0, 0, 0, .07);
 
-      --radius-sm: 10px;
-      --radius-md: 16px;
-      --radius-lg: 22px;
+      --radius: 18px;
     }
 
     * {
@@ -57,7 +55,7 @@
 
     body {
       min-height: 100vh;
-      background: var(--background);
+      background: var(--bg);
       color: var(--text);
       font-family:
         Inter,
@@ -79,12 +77,15 @@
 
     img {
       max-width: 100%;
-      display: block;
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     /* =====================================================
        LOGIN
-       ===================================================== */
+    ===================================================== */
 
     .login-screen {
       min-height: 100vh;
@@ -94,48 +95,49 @@
       align-items: center;
       justify-content: center;
 
-      padding: 24px;
+      padding: 20px;
 
       background:
         radial-gradient(
-          circle at 50% 0%,
+          circle at top,
           rgba(196, 30, 22, .12),
-          transparent 55%
+          transparent 50%
         ),
-        var(--background);
+        var(--bg);
     }
 
     .login-card {
       width: 100%;
       max-width: 420px;
 
+      padding: 30px 24px;
+
       background: var(--white);
 
       border: 1px solid var(--border);
-      border-radius: 26px;
+      border-radius: 24px;
 
-      padding: 32px 24px;
-
-      box-shadow: var(--shadow-md);
+      box-shadow: var(--shadow);
     }
 
     .login-logo {
-      width: 72px;
-      height: 72px;
+      width: 70px;
+      height: 70px;
+
+      display: block;
+
+      margin: 0 auto 18px;
 
       object-fit: cover;
 
       border-radius: 18px;
-
-      margin: 0 auto 20px;
     }
 
     .login-title {
       text-align: center;
 
       font-size: 28px;
-      font-weight: 800;
-
+      font-weight: 850;
       letter-spacing: -.04em;
     }
 
@@ -151,179 +153,55 @@
     }
 
     .login-form {
-      margin-top: 28px;
+      margin-top: 26px;
     }
 
     /* =====================================================
-       APP
-       ===================================================== */
+       INPUTS
+    ===================================================== */
 
-    .app {
-      display: none;
-      min-height: 100vh;
-      min-height: 100dvh;
+    .field {
+      margin-bottom: 16px;
     }
 
-    .app.is-visible {
+    .field label {
       display: block;
+
+      margin-bottom: 7px;
+
+      font-size: 13px;
+      font-weight: 750;
     }
 
-    .sidebar {
-      position: fixed;
+    .field input {
+      width: 100%;
+      height: 48px;
 
-      left: 0;
-      top: 0;
-      bottom: 0;
-
-      width: 250px;
+      padding: 0 14px;
 
       background: var(--white);
 
-      border-right: 1px solid var(--border);
-
-      padding: 24px 16px;
-
-      z-index: 50;
-
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-
-      padding: 4px 8px 24px;
-
-      border-bottom: 1px solid var(--border);
-    }
-
-    .brand img {
-      width: 42px;
-      height: 42px;
-
+      border: 1px solid var(--border);
       border-radius: 12px;
 
-      object-fit: cover;
-    }
-
-    .brand strong {
-      display: block;
-
-      font-size: 15px;
-      font-weight: 800;
-    }
-
-    .brand span {
-      display: block;
-
-      margin-top: 2px;
-
-      color: var(--muted);
-
-      font-size: 12px;
-    }
-
-    .nav {
-      display: flex;
-      flex-direction: column;
-
-      gap: 5px;
-
-      margin-top: 20px;
-    }
-
-    .nav button {
-      width: 100%;
-
-      display: flex;
-      align-items: center;
-
-      gap: 11px;
-
-      border: 0;
-      border-radius: 12px;
-
-      padding: 13px 12px;
-
-      background: transparent;
+      outline: none;
 
       color: var(--text);
-
-      text-align: left;
-
-      font-size: 14px;
-      font-weight: 600;
-
-      transition:
-        background .18s ease,
-        color .18s ease;
     }
 
-    .nav button:hover {
-      background: #f8f5f3;
-    }
+    .field input:focus {
+      border-color: var(--red);
 
-    .nav button.active {
-      background: var(--red-soft);
-      color: var(--red);
-    }
-
-    .sidebar-bottom {
-      margin-top: auto;
-
-      display: flex;
-      flex-direction: column;
-
-      gap: 8px;
-    }
-
-    .main {
-      margin-left: 250px;
-
-      min-height: 100vh;
-      min-height: 100dvh;
-
-      padding: 28px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 16px;
-
-      margin-bottom: 26px;
-    }
-
-    .topbar h1 {
-      font-size: 28px;
-      line-height: 1.1;
-
-      letter-spacing: -.04em;
-    }
-
-    .topbar p {
-      margin-top: 6px;
-
-      color: var(--muted);
-
-      font-size: 14px;
-    }
-
-    .topbar-actions {
-      display: flex;
-      gap: 8px;
+      box-shadow:
+        0 0 0 3px rgba(196, 30, 22, .08);
     }
 
     /* =====================================================
        BUTTONS
-       ===================================================== */
+    ===================================================== */
 
     .btn {
-      min-height: 44px;
+      min-height: 46px;
 
       border: 0;
       border-radius: 12px;
@@ -333,16 +211,13 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-
       gap: 8px;
 
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 750;
 
       transition:
-        transform .15s ease,
-        box-shadow .15s ease,
-        background .15s ease;
+        .15s ease;
     }
 
     .btn:active {
@@ -351,10 +226,7 @@
 
     .btn-primary {
       background: var(--red);
-      color: var(--white);
-
-      box-shadow:
-        0 7px 18px rgba(196, 30, 22, .18);
+      color: white;
     }
 
     .btn-primary:hover {
@@ -362,94 +234,200 @@
     }
 
     .btn-secondary {
-      background: var(--white);
+      background: white;
       color: var(--text);
 
       border: 1px solid var(--border);
     }
 
     .btn-danger {
-      background: var(--danger-soft);
+      background: var(--danger-light);
       color: var(--danger);
+
+      border: 1px solid #ffd4d4;
     }
 
-    .btn-small {
-      min-height: 38px;
-
-      padding: 0 12px;
-
-      font-size: 13px;
+    .btn-green {
+      background: var(--green);
+      color: white;
     }
 
     .btn-full {
       width: 100%;
     }
 
-    /* =====================================================
-       FORMS
-       ===================================================== */
+    .error {
+      margin-top: 12px;
 
-    .form-group {
-      margin-bottom: 16px;
-    }
+      padding: 12px;
 
-    .form-label {
-      display: block;
+      background: var(--danger-light);
 
-      margin-bottom: 7px;
-
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .input {
-      width: 100%;
-
-      min-height: 46px;
-
-      border: 1px solid var(--border);
+      border: 1px solid #ffd5d5;
       border-radius: 12px;
-
-      padding: 0 13px;
-
-      background: var(--white);
-
-      color: var(--text);
-
-      outline: none;
-
-      transition:
-        border-color .15s ease,
-        box-shadow .15s ease;
-    }
-
-    .input:focus {
-      border-color: var(--red);
-
-      box-shadow:
-        0 0 0 4px rgba(196, 30, 22, .08);
-    }
-
-    .input[type="number"] {
-      appearance: textfield;
-    }
-
-    .form-error {
-      min-height: 20px;
-
-      margin-top: 10px;
 
       color: var(--danger);
 
       font-size: 13px;
-      font-weight: 600;
-
-      text-align: center;
     }
 
     /* =====================================================
-       DASHBOARD
-       ===================================================== */
+       APP
+    ===================================================== */
+
+    .app {
+      display: none;
+
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    .app.visible {
+      display: block;
+    }
+
+    /* =====================================================
+       SIDEBAR
+    ===================================================== */
+
+    .sidebar {
+      position: fixed;
+
+      left: 0;
+      top: 0;
+      bottom: 0;
+
+      width: 245px;
+
+      padding: 22px 15px;
+
+      background: white;
+
+      border-right: 1px solid var(--border);
+
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+
+      padding: 4px 7px 22px;
+
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand img {
+      width: 42px;
+      height: 42px;
+
+      object-fit: cover;
+
+      border-radius: 12px;
+    }
+
+    .brand strong {
+      display: block;
+
+      font-size: 15px;
+    }
+
+    .brand span {
+      display: block;
+
+      margin-top: 2px;
+
+      color: var(--muted);
+
+      font-size: 11px;
+    }
+
+    .nav {
+      display: grid;
+
+      gap: 6px;
+
+      margin-top: 20px;
+    }
+
+    .nav button {
+      width: 100%;
+
+      min-height: 46px;
+
+      display: flex;
+      align-items: center;
+
+      gap: 10px;
+
+      padding: 0 12px;
+
+      border: 0;
+      border-radius: 12px;
+
+      background: transparent;
+
+      color: var(--text);
+
+      text-align: left;
+
+      font-weight: 700;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: var(--red-light);
+      color: var(--red);
+    }
+
+    .logout {
+      position: absolute;
+
+      left: 15px;
+      right: 15px;
+      bottom: 20px;
+    }
+
+    /* =====================================================
+       MAIN
+    ===================================================== */
+
+    .main {
+      margin-left: 245px;
+
+      min-height: 100vh;
+
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 15px;
+
+      margin-bottom: 25px;
+    }
+
+    .topbar h1 {
+      font-size: 30px;
+
+      letter-spacing: -.04em;
+    }
+
+    .topbar p {
+      margin-top: 5px;
+
+      color: var(--muted);
+
+      font-size: 14px;
+    }
+
+    /* =====================================================
+       PAGES
+    ===================================================== */
 
     .page {
       display: none;
@@ -457,157 +435,81 @@
 
     .page.active {
       display: block;
-
-      animation: fadeIn .2s ease;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(5px);
-      }
+    /* =====================================================
+       STATS
+    ===================================================== */
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .stats-grid {
+    .stats {
       display: grid;
 
       grid-template-columns:
         repeat(3, minmax(0, 1fr));
 
-      gap: 16px;
+      gap: 15px;
+
+      margin-bottom: 25px;
     }
 
-    .stat-card {
-      background: var(--white);
-
-      border: 1px solid var(--border);
-      border-radius: 18px;
-
+    .stat {
       padding: 20px;
 
-      box-shadow: var(--shadow-sm);
+      background: white;
+
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+
+      box-shadow: var(--shadow);
     }
 
     .stat-label {
       color: var(--muted);
 
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 650;
     }
 
     .stat-value {
-      margin-top: 9px;
+      margin-top: 8px;
 
       font-size: 30px;
-      font-weight: 800;
-
-      letter-spacing: -.04em;
+      font-weight: 850;
     }
 
-    .shortcut-grid {
-      display: grid;
+    /* =====================================================
+       SECTION HEADER
+    ===================================================== */
 
-      grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
-      gap: 16px;
+      gap: 15px;
 
-      margin-top: 20px;
+      margin-bottom: 16px;
     }
 
-    .shortcut {
-      width: 100%;
+    .section-header h2 {
+      font-size: 22px;
 
-      padding: 20px;
-
-      border: 1px solid var(--border);
-      border-radius: 18px;
-
-      background: var(--white);
-
-      text-align: left;
-
-      box-shadow: var(--shadow-sm);
-
-      transition:
-        transform .18s ease,
-        box-shadow .18s ease;
+      letter-spacing: -.03em;
     }
 
-    .shortcut:hover {
-      transform: translateY(-2px);
-
-      box-shadow: var(--shadow-md);
-    }
-
-    .shortcut-icon {
-      font-size: 25px;
-    }
-
-    .shortcut strong {
-      display: block;
-
-      margin-top: 13px;
-
-      font-size: 15px;
-    }
-
-    .shortcut span {
-      display: block;
-
-      margin-top: 5px;
+    .section-header p {
+      margin-top: 4px;
 
       color: var(--muted);
 
       font-size: 13px;
-      line-height: 1.4;
     }
 
     /* =====================================================
-       CATALOGUE
-       ===================================================== */
+       PRODUCTS
+    ===================================================== */
 
-    .catalog-toolbar {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      gap: 12px;
-
-      margin-bottom: 18px;
-    }
-
-    .search {
-      flex: 1;
-
-      position: relative;
-    }
-
-    .search .input {
-      padding-left: 40px;
-    }
-
-    .search-icon {
-      position: absolute;
-
-      left: 14px;
-      top: 50%;
-
-      transform: translateY(-50%);
-
-      color: var(--muted);
-
-      pointer-events: none;
-    }
-
-    .product-grid {
+    .products-grid {
       display: grid;
 
       grid-template-columns:
@@ -617,53 +519,33 @@
     }
 
     .product-card {
-      background: var(--white);
+      overflow: hidden;
+
+      background: white;
 
       border: 1px solid var(--border);
-      border-radius: 18px;
+      border-radius: var(--radius);
 
-      overflow: hidden;
-
-      box-shadow: var(--shadow-sm);
-
-      display: flex;
-      flex-direction: column;
-    }
-
-    .product-image-wrap {
-      aspect-ratio: 16 / 10;
-
-      background: #f0ece9;
-
-      overflow: hidden;
+      box-shadow: var(--shadow);
     }
 
     .product-image {
       width: 100%;
-      height: 100%;
+      height: 190px;
+
+      display: block;
 
       object-fit: cover;
+
+      background: #eee;
     }
 
-    .product-image-fallback {
-      width: 100%;
-      height: 100%;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      color: #aaa;
-
-      font-size: 30px;
-    }
-
-    .product-body {
+    .product-content {
       padding: 16px;
     }
 
     .product-name {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 800;
     }
 
@@ -672,16 +554,15 @@
 
       color: var(--red);
 
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 800;
     }
 
-    .variant-price {
-      margin-top: 4px;
-
+    .product-price small {
       color: var(--muted);
 
-      font-size: 13px;
+      font-size: 12px;
+      font-weight: 650;
     }
 
     .product-actions {
@@ -691,165 +572,226 @@
 
       gap: 8px;
 
-      margin-top: 15px;
+      margin-top: 14px;
     }
 
     .empty {
-      padding: 50px 20px;
+      padding: 45px 20px;
 
-      background: var(--white);
+      background: white;
 
       border: 1px dashed var(--border);
-      border-radius: 18px;
-
-      color: var(--muted);
+      border-radius: var(--radius);
 
       text-align: center;
+
+      color: var(--muted);
     }
 
     /* =====================================================
        MODAL
-       ===================================================== */
+    ===================================================== */
 
-    .modal-backdrop {
+    .modal {
       position: fixed;
 
       inset: 0;
 
-      z-index: 100;
+      z-index: 500;
 
       display: none;
-
       align-items: center;
       justify-content: center;
 
       padding: 20px;
 
-      background: rgba(23, 20, 20, .58);
-
-      backdrop-filter: blur(5px);
+      background: rgba(0, 0, 0, .55);
     }
 
-    .modal-backdrop.visible {
+    .modal.open {
       display: flex;
     }
 
-    .modal {
+    .modal-box {
       width: 100%;
-      max-width: 500px;
+      max-width: 560px;
 
-      max-height: 90vh;
-      max-height: 90dvh;
+      max-height: 92vh;
+      max-height: 92dvh;
 
       overflow-y: auto;
 
-      background: var(--white);
+      padding: 22px;
+
+      background: white;
 
       border-radius: 22px;
 
-      box-shadow: var(--shadow-md);
-
-      padding: 22px;
+      box-shadow:
+        0 25px 80px rgba(0, 0, 0, .25);
     }
 
     .modal-header {
       display: flex;
-
       align-items: center;
-
       justify-content: space-between;
 
-      gap: 12px;
+      gap: 15px;
 
       margin-bottom: 20px;
     }
 
-    .modal-title {
+    .modal-header h3 {
+      font-size: 21px;
+    }
+
+    .close {
+      width: 40px;
+      height: 40px;
+
+      border: 0;
+      border-radius: 10px;
+
+      background: #f2efed;
+
       font-size: 20px;
+    }
+
+    .category-badge {
+      display: inline-flex;
+
+      margin-bottom: 15px;
+
+      padding: 6px 10px;
+
+      background: var(--red-light);
+
+      border-radius: 999px;
+
+      color: var(--red);
+
+      font-size: 12px;
       font-weight: 800;
     }
 
-    .close-btn {
-      width: 38px;
-      height: 38px;
+    .upload-box {
+      padding: 14px;
 
-      border-radius: 50%;
+      background: #faf8f7;
 
-      background: #f5f2f0;
+      border: 1px dashed #d8d0cb;
 
-      color: var(--muted);
+      border-radius: 14px;
+    }
 
-      font-size: 18px;
+    .upload-box input[type="file"] {
+      width: 100%;
     }
 
     .preview {
       width: 100%;
+      max-height: 220px;
 
-      aspect-ratio: 16 / 9;
+      margin-top: 12px;
 
-      border-radius: 14px;
-
-      overflow: hidden;
-
-      background: #f0ece9;
-
-      margin-top: 10px;
-    }
-
-    .preview img {
-      width: 100%;
-      height: 100%;
+      display: none;
 
       object-fit: cover;
+
+      border-radius: 14px;
+    }
+
+    .current-image {
+      margin-top: 10px;
+
+      color: var(--muted);
+
+      font-size: 12px;
     }
 
     .modal-actions {
-      display: flex;
+      display: grid;
 
-      gap: 8px;
+      grid-template-columns: 1fr 1fr;
+
+      gap: 10px;
 
       margin-top: 20px;
     }
 
-    .modal-actions .btn {
-      flex: 1;
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    .loading {
+      padding: 30px;
+
+      text-align: center;
+
+      color: var(--muted);
+    }
+
+    .spinner {
+      width: 24px;
+      height: 24px;
+
+      margin: 0 auto 10px;
+
+      border: 3px solid #eee;
+      border-top-color: var(--red);
+
+      border-radius: 50%;
+
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     /* =====================================================
        TOAST
-       ===================================================== */
-
-    .toast-container {
-      position: fixed;
-
-      right: 18px;
-      bottom: 18px;
-
-      z-index: 200;
-
-      display: flex;
-      flex-direction: column;
-
-      gap: 8px;
-
-      width: min(360px, calc(100vw - 36px));
-    }
+    ===================================================== */
 
     .toast {
-      padding: 14px 16px;
+      position: fixed;
 
-      background: var(--black);
+      left: 50%;
+      bottom: 25px;
+
+      z-index: 1000;
+
+      transform:
+        translate(-50%, 100px);
+
+      opacity: 0;
+
+      min-width: 260px;
+      max-width: calc(100% - 30px);
+
+      padding: 14px 17px;
+
+      background: #191716;
 
       color: white;
 
-      border-radius: 14px;
+      border-radius: 13px;
 
-      box-shadow: var(--shadow-md);
+      text-align: center;
 
       font-size: 13px;
       font-weight: 700;
 
-      animation: toastIn .2s ease;
+      transition: .25s ease;
+    }
+
+    .toast.show {
+      transform:
+        translate(-50%, 0);
+
+      opacity: 1;
     }
 
     .toast.success {
@@ -860,34 +802,31 @@
       background: var(--danger);
     }
 
-    @keyframes toastIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
+    /* =====================================================
+       MOBILE NAV
+    ===================================================== */
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .mobile-nav {
+      display: none;
     }
 
     /* =====================================================
        MOBILE
-       ===================================================== */
+    ===================================================== */
 
-    .mobile-header {
-      display: none;
-    }
-
-    @media (max-width: 1050px) {
-      .product-grid {
+    @media (max-width: 1000px) {
+      .products-grid {
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (max-width: 850px) {
+    @media (max-width: 760px) {
+
+      body {
+        padding-bottom: 76px;
+      }
+
       .sidebar {
         display: none;
       }
@@ -896,147 +835,213 @@
         margin-left: 0;
 
         padding:
-          74px 16px
-          calc(90px + env(safe-area-inset-bottom));
-      }
-
-      .mobile-header {
-        position: fixed;
-
-        top: 0;
-        left: 0;
-        right: 0;
-
-        height: 60px;
-
-        z-index: 60;
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        padding: 0 16px;
-
-        background: rgba(255,255,255,.94);
-
-        backdrop-filter: blur(12px);
-
-        border-bottom: 1px solid var(--border);
-      }
-
-      .mobile-header-brand {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-      }
-
-      .mobile-header-brand img {
-        width: 34px;
-        height: 34px;
-
-        border-radius: 9px;
-      }
-
-      .mobile-header-brand strong {
-        font-size: 14px;
-      }
-
-      .mobile-menu-btn {
-        width: 40px;
-        height: 40px;
-
-        border-radius: 10px;
-
-        background: #f5f2f0;
-
-        font-size: 18px;
-      }
-
-      .mobile-bottom-nav {
-        position: fixed;
-
-        left: 10px;
-        right: 10px;
-        bottom: calc(10px + env(safe-area-inset-bottom));
-
-        z-index: 60;
-
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-
-        padding: 7px;
-
-        background: rgba(255,255,255,.96);
-
-        backdrop-filter: blur(12px);
-
-        border: 1px solid var(--border);
-
-        border-radius: 18px;
-
-        box-shadow: var(--shadow-md);
-      }
-
-      .mobile-bottom-nav button {
-        min-height: 52px;
-
-        border-radius: 13px;
-
-        color: var(--muted);
-
-        font-size: 11px;
-        font-weight: 700;
-      }
-
-      .mobile-bottom-nav button.active {
-        background: var(--red-soft);
-
-        color: var(--red);
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .shortcut-grid {
-        grid-template-columns: 1fr;
+          18px
+          14px
+          95px;
       }
 
       .topbar {
         align-items: flex-start;
-      }
 
-      .topbar-actions {
-        display: none;
-      }
-    }
-
-    @media (max-width: 580px) {
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .product-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .catalog-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .catalog-toolbar .btn {
-        width: 100%;
+        margin-bottom: 20px;
       }
 
       .topbar h1 {
-        font-size: 24px;
+        font-size: 25px;
+      }
+
+      .topbar p {
+        font-size: 12px;
+      }
+
+      .topbar .btn {
+        min-width: 44px;
+
+        padding: 0 12px;
+
+        font-size: 0;
+      }
+
+      .topbar .btn::before {
+        content: "↻";
+
+        font-size: 20px;
+      }
+
+      .stats {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+      }
+
+      .stat {
+        padding: 15px;
+      }
+
+      .stat-value {
+        font-size: 25px;
+      }
+
+      .products-grid {
+        grid-template-columns: 1fr;
+
+        gap: 13px;
+      }
+
+      .product-card {
+        display: grid;
+
+        grid-template-columns: 115px 1fr;
+      }
+
+      .product-image {
+        height: 100%;
+
+        min-height: 150px;
+      }
+
+      .product-content {
+        padding: 14px;
+      }
+
+      .product-name {
+        font-size: 15px;
+      }
+
+      .product-price {
+        font-size: 14px;
+      }
+
+      .product-actions {
+        grid-template-columns: 1fr 1fr;
+
+        margin-top: 10px;
+      }
+
+      .product-actions .btn {
+        min-height: 40px;
+
+        padding: 0 8px;
+
+        font-size: 12px;
+      }
+
+      .section-header {
+        align-items: flex-start;
+      }
+
+      .section-header h2 {
+        font-size: 19px;
+      }
+
+      .section-header .btn {
+        min-height: 42px;
+
+        padding: 0 12px;
+
+        font-size: 12px;
+      }
+
+      .mobile-nav {
+        position: fixed;
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        z-index: 300;
+
+        height: 72px;
+
+        display: grid;
+
+        grid-template-columns:
+          repeat(3, 1fr);
+
+        padding:
+          7px 8px
+          env(safe-area-inset-bottom);
+
+        background:
+          rgba(255,255,255,.96);
+
+        border-top: 1px solid var(--border);
+
+        box-shadow:
+          0 -8px 25px rgba(0,0,0,.06);
+
+        backdrop-filter: blur(10px);
+      }
+
+      .mobile-nav button {
+        border: 0;
+
+        background: transparent;
+
+        border-radius: 12px;
+
+        color: var(--muted);
+
+        font-size: 11px;
+        font-weight: 750;
+      }
+
+      .mobile-nav button span {
+        display: block;
+
+        margin-bottom: 3px;
+
+        font-size: 20px;
+      }
+
+      .mobile-nav button.active {
+        background: var(--red-light);
+
+        color: var(--red);
       }
 
       .modal {
-        padding: 18px;
+        align-items: flex-end;
 
-        border-radius: 20px;
+        padding: 0;
+      }
+
+      .modal-box {
+        max-height: 94dvh;
+
+        border-radius:
+          22px 22px 0 0;
+
+        padding:
+          20px 16px
+          calc(20px + env(safe-area-inset-bottom));
+      }
+
+      .modal-actions {
+        grid-template-columns: 1fr;
+
+        position: sticky;
+
+        bottom: 0;
+
+        padding-top: 10px;
+
+        background: white;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .product-card {
+        grid-template-columns: 100px 1fr;
+      }
+
+      .product-image {
+        min-height: 135px;
+      }
+
+      .product-content {
+        padding: 11px;
       }
     }
   </style>
@@ -1044,1858 +1049,1955 @@
 
 <body>
 
-  <!-- ==========================================================
-       LOGIN
-       ========================================================== -->
+<!-- =====================================================
+     LOGIN
+===================================================== -->
 
-  <section id="loginScreen" class="login-screen">
+<section id="loginScreen" class="login-screen">
 
-    <div class="login-card">
+  <div class="login-card">
 
-      <img
-        src="logo-male.png"
-        alt="Malé Tacos"
-        class="login-logo"
-      >
+    <img
+      src="./logo.jpg"
+      alt="Malé Tacos"
+      class="login-logo"
+      onerror="this.style.display='none'"
+    >
 
-      <h1 class="login-title">
-        Administration
-      </h1>
+    <h1 class="login-title">
+      Malé Tacos
+    </h1>
 
-      <p class="login-subtitle">
-        Gérez le catalogue Malé Tacos depuis votre téléphone ou votre ordinateur.
-      </p>
+    <p class="login-subtitle">
+      Administration du menu
+    </p>
 
-      <form id="loginForm" class="login-form">
+    <form id="loginForm" class="login-form">
 
-        <div class="form-group">
+      <div class="field">
 
-          <label
-            for="loginPassword"
-            class="form-label"
-          >
-            Mot de passe administrateur
-          </label>
+        <label for="password">
+          Mot de passe administrateur
+        </label>
 
-          <input
-            id="loginPassword"
-            class="input"
-            type="password"
-            autocomplete="current-password"
-            placeholder="Entrer le mot de passe"
-            required
-          >
-
-        </div>
-
-        <button
-          type="submit"
-          class="btn btn-primary btn-full"
-          id="loginButton"
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Votre mot de passe"
+          required
         >
-          Se connecter
-        </button>
-
-        <p
-          id="loginError"
-          class="form-error"
-          aria-live="polite"
-        ></p>
-
-      </form>
-
-    </div>
-
-  </section>
-
-
-  <!-- ==========================================================
-       APPLICATION
-       ========================================================== -->
-
-  <div id="app" class="app">
-
-    <!-- Mobile header -->
-
-    <header class="mobile-header">
-
-      <div class="mobile-header-brand">
-
-        <img
-          src="logo-male.png"
-          alt="Malé Tacos"
-        >
-
-        <strong>
-          Malé Tacos
-        </strong>
 
       </div>
 
       <button
-        class="mobile-menu-btn"
-        id="mobileLogout"
-        title="Déconnexion"
+        id="loginButton"
+        class="btn btn-primary btn-full"
+        type="submit"
       >
-        ⇥
+        Se connecter
+      </button>
+
+      <div
+        id="loginError"
+        class="error hidden"
+      ></div>
+
+    </form>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     APPLICATION
+===================================================== -->
+
+<div id="app" class="app">
+
+  <!-- DESKTOP SIDEBAR -->
+
+  <aside class="sidebar">
+
+    <div class="brand">
+
+      <img
+        src="./logo.jpg"
+        alt="Malé Tacos"
+        onerror="this.style.display='none'"
+      >
+
+      <div>
+        <strong>Malé Tacos</strong>
+        <span>Administration</span>
+      </div>
+
+    </div>
+
+    <nav class="nav">
+
+      <button
+        class="nav-btn active"
+        data-page="dashboard"
+      >
+        🏠
+        <span>Dashboard</span>
+      </button>
+
+      <button
+        class="nav-btn"
+        data-page="eleve"
+      >
+        🎓
+        <span>Institut Bobokoli</span>
+      </button>
+
+      <button
+        class="nav-btn"
+        data-page="exterieur"
+      >
+        🛵
+        <span>Livraison</span>
+      </button>
+
+    </nav>
+
+    <button
+      id="logoutButton"
+      class="btn btn-secondary btn-full logout"
+    >
+      🚪 Déconnexion
+    </button>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div>
+        <h1 id="pageTitle">
+          Dashboard
+        </h1>
+
+        <p id="pageSubtitle">
+          Gestion du catalogue Malé Tacos
+        </p>
+      </div>
+
+      <button
+        id="refreshButton"
+        class="btn btn-secondary"
+        type="button"
+      >
+        Actualiser
       </button>
 
     </header>
 
 
-    <!-- Desktop sidebar -->
-
-    <aside class="sidebar">
-
-      <div class="brand">
-
-        <img
-          src="logo-male.png"
-          alt="Malé Tacos"
-        >
-
-        <div>
-
-          <strong>
-            Malé Tacos
-          </strong>
-
-          <span>
-            Administration
-          </span>
-
-        </div>
-
-      </div>
-
-      <nav class="nav">
-
-        <button
-          class="nav-btn active"
-          data-page="dashboard"
-        >
-          📊
-          Tableau de bord
-        </button>
-
-        <button
-          class="nav-btn"
-          data-page="eleve"
-        >
-          🏫
-          Institut Bobokoli
-        </button>
-
-        <button
-          class="nav-btn"
-          data-page="exterieur"
-        >
-          🛵
-          Extérieur / Livraison
-        </button>
-
-        <button
-          class="nav-btn"
-          data-page="add"
-        >
-          ＋
-          Ajouter un produit
-        </button>
-
-      </nav>
-
-      <div class="sidebar-bottom">
-
-        <button
-          class="btn btn-secondary btn-full"
-          id="viewSiteDesktop"
-        >
-          ↗ Voir le site
-        </button>
-
-        <button
-          class="btn btn-secondary btn-full"
-          id="logoutDesktop"
-        >
-          Se déconnecter
-        </button>
-
-      </div>
-
-    </aside>
-
-
-    <!-- Main -->
-
-    <main class="main">
-
-      <!-- ======================================================
-           DASHBOARD
-           ====================================================== -->
-
-      <section
-        id="page-dashboard"
-        class="page active"
-      >
-
-        <div class="topbar">
-
-          <div>
-
-            <h1>
-              Tableau de bord
-            </h1>
-
-            <p>
-              Vue générale du catalogue Malé Tacos.
-            </p>
-
-          </div>
-
-          <div class="topbar-actions">
-
-            <button
-              class="btn btn-secondary"
-              id="viewSiteTop"
-            >
-              ↗ Voir le site
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="stats-grid">
-
-          <article class="stat-card">
-
-            <div class="stat-label">
-              Produits total
-            </div>
-
-            <div
-              class="stat-value"
-              id="statTotal"
-            >
-              0
-            </div>
-
-          </article>
-
-          <article class="stat-card">
-
-            <div class="stat-label">
-              Institut Bobokoli
-            </div>
-
-            <div
-              class="stat-value"
-              id="statEleve"
-            >
-              0
-            </div>
-
-          </article>
-
-          <article class="stat-card">
-
-            <div class="stat-label">
-              Extérieur / Livraison
-            </div>
-
-            <div
-              class="stat-value"
-              id="statExterieur"
-            >
-              0
-            </div>
-
-          </article>
-
-        </div>
-
-
-        <div class="shortcut-grid">
-
-          <button
-            class="shortcut"
-            data-go="eleve"
-          >
-
-            <div class="shortcut-icon">
-              🏫
-            </div>
-
-            <strong>
-              Institut Bobokoli
-            </strong>
-
-            <span>
-              Gérer les produits destinés aux élèves.
-            </span>
-
-          </button>
-
-
-          <button
-            class="shortcut"
-            data-go="exterieur"
-          >
-
-            <div class="shortcut-icon">
-              🛵
-            </div>
-
-            <strong>
-              Extérieur / Livraison
-            </strong>
-
-            <span>
-              Gérer les tacos et tarifs de livraison.
-            </span>
-
-          </button>
-
-
-          <button
-            class="shortcut"
-            data-go="add"
-          >
-
-            <div class="shortcut-icon">
-              ＋
-            </div>
-
-            <strong>
-              Ajouter un produit
-            </strong>
-
-            <span>
-              Créer rapidement un nouveau produit.
-            </span>
-
-          </button>
-
-        </div>
-
-      </section>
-
-
-      <!-- ======================================================
-           ELEVE
-           ====================================================== -->
-
-      <section
-        id="page-eleve"
-        class="page"
-      >
-
-        <div class="topbar">
-
-          <div>
-
-            <h1>
-              Institut Bobokoli
-            </h1>
-
-            <p>
-              Catalogue élèves — retrait sur place.
-            </p>
-
-          </div>
-
-          <div class="topbar-actions">
-
-            <button
-              class="btn btn-primary"
-              data-add-category="eleve"
-            >
-              ＋ Ajouter
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="catalog-toolbar">
-
-          <div class="search">
-
-            <span class="search-icon">
-              🔎
-            </span>
-
-            <input
-              id="searchEleve"
-              class="input"
-              type="search"
-              placeholder="Rechercher un produit..."
-              autocomplete="off"
-            >
-
-          </div>
-
-          <button
-            class="btn btn-primary"
-            data-add-category="eleve"
-          >
-            ＋ Ajouter un produit
-          </button>
-
-        </div>
-
-
-        <div
-          id="eleveGrid"
-          class="product-grid"
-        ></div>
-
-      </section>
-
-
-      <!-- ======================================================
-           EXTERIEUR
-           ====================================================== -->
-
-      <section
-        id="page-exterieur"
-        class="page"
-      >
-
-        <div class="topbar">
-
-          <div>
-
-            <h1>
-              Extérieur / Livraison
-            </h1>
-
-            <p>
-              Catalogue livraison — tarifs L et XL.
-            </p>
-
-          </div>
-
-          <div class="topbar-actions">
-
-            <button
-              class="btn btn-primary"
-              data-add-category="exterieur"
-            >
-              ＋ Ajouter
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="catalog-toolbar">
-
-          <div class="search">
-
-            <span class="search-icon">
-              🔎
-            </span>
-
-            <input
-              id="searchExterieur"
-              class="input"
-              type="search"
-              placeholder="Rechercher un produit..."
-              autocomplete="off"
-            >
-
-          </div>
-
-          <button
-            class="btn btn-primary"
-            data-add-category="exterieur"
-          >
-            ＋ Ajouter un produit
-          </button>
-
-        </div>
-
-
-        <div
-          id="exterieurGrid"
-          class="product-grid"
-        ></div>
-
-      </section>
-
-
-      <!-- ======================================================
-           ADD
-           ====================================================== -->
-
-      <section
-        id="page-add"
-        class="page"
-      >
-
-        <div class="topbar">
-
-          <div>
-
-            <h1>
-              Ajouter un produit
-            </h1>
-
-            <p>
-              Choisissez le catalogue puis remplissez les informations.
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="shortcut-grid">
-
-          <button
-            class="shortcut"
-            data-add-category="eleve"
-          >
-
-            <div class="shortcut-icon">
-              🏫
-            </div>
-
-            <strong>
-              Ajouter à Institut Bobokoli
-            </strong>
-
-            <span>
-              Produit avec un seul prix.
-            </span>
-
-          </button>
-
-
-          <button
-            class="shortcut"
-            data-add-category="exterieur"
-          >
-
-            <div class="shortcut-icon">
-              🛵
-            </div>
-
-            <strong>
-              Ajouter à Extérieur / Livraison
-            </strong>
-
-            <span>
-              Produit avec prix L et XL.
-            </span>
-
-          </button>
-
-        </div>
-
-      </section>
-
-    </main>
-
-
-    <!-- Mobile navigation -->
-
-    <nav class="mobile-bottom-nav">
-
-      <button
-        class="mobile-nav-btn active"
-        data-page="dashboard"
-      >
-        📊
-        <br>
-        Accueil
-      </button>
-
-      <button
-        class="mobile-nav-btn"
-        data-page="eleve"
-      >
-        🏫
-        <br>
-        Institut
-      </button>
-
-      <button
-        class="mobile-nav-btn"
-        data-page="exterieur"
-      >
-        🛵
-        <br>
-        Livraison
-      </button>
-
-      <button
-        class="mobile-nav-btn"
-        data-page="add"
-      >
-        ＋
-        <br>
-        Ajouter
-      </button>
-
-    </nav>
-
-  </div>
-
-
-  <!-- ==========================================================
-       MODAL PRODUIT
-       ========================================================== -->
-
-  <div
-    id="modalBackdrop"
-    class="modal-backdrop"
-  >
-
-    <div
-      class="modal"
-      role="dialog"
-      aria-modal="true"
+    <!-- =================================================
+         DASHBOARD
+    ================================================== -->
+
+    <section
+      id="page-dashboard"
+      class="page active"
     >
 
-      <div class="modal-header">
+      <div class="stats">
 
-        <h2
-          id="modalTitle"
-          class="modal-title"
-        >
-          Ajouter un produit
-        </h2>
+        <div class="stat">
 
-        <button
-          id="closeModal"
-          class="close-btn"
-          type="button"
-        >
-          ✕
-        </button>
-
-      </div>
-
-
-      <form id="productForm">
-
-        <input
-          id="productId"
-          type="hidden"
-        >
-
-        <input
-          id="productCategory"
-          type="hidden"
-        >
-
-
-        <div class="form-group">
-
-          <label
-            class="form-label"
-            for="productName"
-          >
-            Nom du produit
-          </label>
-
-          <input
-            id="productName"
-            class="input"
-            type="text"
-            placeholder="Ex : Tacos Poulet"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label
-            class="form-label"
-            for="productImage"
-          >
-            Image
-          </label>
-
-          <input
-            id="productImage"
-            class="input"
-            type="text"
-            placeholder="tacos-poulet.jpg ou https://..."
-            required
-          >
+          <div class="stat-label">
+            Institut Bobokoli
+          </div>
 
           <div
-            id="imagePreview"
-            class="preview"
+            id="statEleve"
+            class="stat-value"
           >
-            <div class="product-image-fallback">
-              🌮
-            </div>
+            0
           </div>
 
         </div>
 
+        <div class="stat">
 
-        <!-- Prix élève -->
+          <div class="stat-label">
+            Livraison
+          </div>
 
-        <div
-          id="elevePriceGroup"
-          class="form-group"
+          <div
+            id="statExterieur"
+            class="stat-value"
+          >
+            0
+          </div>
+
+        </div>
+
+        <div class="stat">
+
+          <div class="stat-label">
+            Total produits
+          </div>
+
+          <div
+            id="statTotal"
+            class="stat-value"
+          >
+            0
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="section-header">
+
+        <div>
+          <h2>
+            Produits actuels
+          </h2>
+
+          <p>
+            Les produits enregistrés actuellement dans le menu.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div
+        id="dashboardProducts"
+        class="products-grid"
+      ></div>
+
+    </section>
+
+
+    <!-- =================================================
+         INSTITUT
+    ================================================== -->
+
+    <section
+      id="page-eleve"
+      class="page"
+    >
+
+      <div class="section-header">
+
+        <div>
+          <h2>
+            Institut Bobokoli
+          </h2>
+
+          <p>
+            Produits disponibles pour les élèves.
+          </p>
+        </div>
+
+        <button
+          class="btn btn-primary"
+          type="button"
+          onclick="openAddModal('eleve')"
+        >
+          + Ajouter
+        </button>
+
+      </div>
+
+      <div
+        id="eleveProducts"
+        class="products-grid"
+      ></div>
+
+    </section>
+
+
+    <!-- =================================================
+         LIVRAISON
+    ================================================== -->
+
+    <section
+      id="page-exterieur"
+      class="page"
+    >
+
+      <div class="section-header">
+
+        <div>
+          <h2>
+            Livraison / Extérieur
+          </h2>
+
+          <p>
+            Produits disponibles pour la livraison.
+          </p>
+        </div>
+
+        <button
+          class="btn btn-primary"
+          type="button"
+          onclick="openAddModal('exterieur')"
+        >
+          + Ajouter
+        </button>
+
+      </div>
+
+      <div
+        id="exterieurProducts"
+        class="products-grid"
+      ></div>
+
+    </section>
+
+  </main>
+
+
+  <!-- MOBILE NAV -->
+
+  <nav class="mobile-nav">
+
+    <button
+      class="mobile-nav-btn active"
+      data-page="dashboard"
+    >
+      <span>🏠</span>
+      Accueil
+    </button>
+
+    <button
+      class="mobile-nav-btn"
+      data-page="eleve"
+    >
+      <span>🎓</span>
+      Institut
+    </button>
+
+    <button
+      class="mobile-nav-btn"
+      data-page="exterieur"
+    >
+      <span>🛵</span>
+      Livraison
+    </button>
+
+  </nav>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL PRODUIT
+===================================================== -->
+
+<div
+  id="productModal"
+  class="modal"
+>
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+
+      <div>
+
+        <span
+          id="modalCategory"
+          class="category-badge"
+        >
+          Produit
+        </span>
+
+        <h3 id="modalTitle">
+          Ajouter un produit
+        </h3>
+
+      </div>
+
+      <button
+        id="closeModalButton"
+        class="close"
+        type="button"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <form id="productForm">
+
+      <input
+        id="productId"
+        type="hidden"
+      >
+
+      <input
+        id="productCategory"
+        type="hidden"
+      >
+
+
+      <div class="field">
+
+        <label for="productName">
+          Nom du produit
+        </label>
+
+        <input
+          id="productName"
+          type="text"
+          placeholder="Ex : Tacos Standard"
+          required
         >
 
-          <label
-            class="form-label"
-            for="productPrice"
-          >
-            Prix
+      </div>
+
+
+      <!-- PRIX ELEVE -->
+
+      <div
+        id="simplePriceField"
+        class="field"
+      >
+
+        <label for="productPrice">
+          Prix
+        </label>
+
+        <input
+          id="productPrice"
+          type="number"
+          min="0"
+          step="1"
+          inputmode="numeric"
+          placeholder="5000"
+        >
+
+      </div>
+
+
+      <!-- PRIX EXTERIEUR -->
+
+      <div
+        id="variantPriceFields"
+        class="hidden"
+      >
+
+        <div class="field">
+
+          <label for="productPriceL">
+            Prix taille L
           </label>
 
           <input
-            id="productPrice"
-            class="input"
+            id="productPriceL"
             type="number"
             min="0"
             step="1"
             inputmode="numeric"
-            placeholder="5000"
+            placeholder="12000"
           >
 
         </div>
 
+        <div class="field">
 
-        <!-- Prix extérieur -->
+          <label for="productPriceXL">
+            Prix taille XL
+          </label>
 
-        <div
-          id="exterieurPriceGroup"
-          style="display:none"
+          <input
+            id="productPriceXL"
+            type="number"
+            min="0"
+            step="1"
+            inputmode="numeric"
+            placeholder="24000"
+          >
+
+        </div>
+
+      </div>
+
+
+      <!-- PHOTO -->
+
+      <div class="field">
+
+        <label>
+          Photo du produit
+        </label>
+
+        <div class="upload-box">
+
+          <input
+            id="productImage"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+          >
+
+          <img
+            id="imagePreview"
+            class="preview"
+            alt="Aperçu"
+          >
+
+          <div
+            id="currentImageText"
+            class="current-image"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          id="cancelButton"
+          type="button"
+          class="btn btn-secondary"
         >
+          Annuler
+        </button>
 
-          <div class="form-group">
+        <button
+          id="saveButton"
+          type="submit"
+          class="btn btn-primary"
+        >
+          Enregistrer
+        </button>
 
-            <label
-              class="form-label"
-              for="productPriceL"
-            >
-              Prix L
-            </label>
+      </div>
 
-            <input
-              id="productPriceL"
-              class="input"
-              type="number"
-              min="0"
-              step="1"
-              inputmode="numeric"
-              placeholder="10000"
-            >
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label
-              class="form-label"
-              for="productPriceXL"
-            >
-              Prix XL
-            </label>
-
-            <input
-              id="productPriceXL"
-              class="input"
-              type="number"
-              min="0"
-              step="1"
-              inputmode="numeric"
-              placeholder="20000"
-            >
-
-          </div>
-
-        </div>
-
-
-        <p
-          id="formMessage"
-          class="form-error"
-        ></p>
-
-
-        <div class="modal-actions">
-
-          <button
-            type="button"
-            id="cancelModal"
-            class="btn btn-secondary"
-          >
-            Annuler
-          </button>
-
-          <button
-            type="submit"
-            class="btn btn-primary"
-            id="saveProduct"
-          >
-            Enregistrer
-          </button>
-
-        </div>
-
-      </form>
-
-    </div>
+    </form>
 
   </div>
 
-
-  <div
-    id="toastContainer"
-    class="toast-container"
-  ></div>
+</div>
 
 
-  <script>
-    'use strict';
+<!-- TOAST -->
 
-    // ==========================================================
-    // ÉTAT
-    // ==========================================================
-
-    let products = {
-      eleve: [],
-      exterieur: []
-    };
-
-    let editingId = null;
-    let editingCategory = null;
+<div
+  id="toast"
+  class="toast"
+></div>
 
 
-    // ==========================================================
-    // UTILITAIRES
-    // ==========================================================
+<script>
+'use strict';
 
-    const $ = selector => document.querySelector(selector);
+/* =====================================================
+   ETAT
+===================================================== */
 
-    function escapeHtml(value) {
-      return String(value ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+let products = {
+  eleve: [],
+  exterieur: [],
+  sauces: [],
+  supplements: [],
+  deliveryFee: 6000
+};
+
+let editingProduct = null;
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const loginScreen =
+  document.getElementById('loginScreen');
+
+const app =
+  document.getElementById('app');
+
+const loginForm =
+  document.getElementById('loginForm');
+
+const loginButton =
+  document.getElementById('loginButton');
+
+const loginError =
+  document.getElementById('loginError');
+
+const productModal =
+  document.getElementById('productModal');
+
+const productForm =
+  document.getElementById('productForm');
+
+const productImage =
+  document.getElementById('productImage');
+
+const imagePreview =
+  document.getElementById('imagePreview');
+
+const currentImageText =
+  document.getElementById('currentImageText');
+
+const saveButton =
+  document.getElementById('saveButton');
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+let toastTimer;
+
+function showToast(message, type = 'success') {
+
+  const toast =
+    document.getElementById('toast');
+
+  toast.textContent = message;
+
+  toast.className =
+    `toast show ${type}`;
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(() => {
+    toast.className = 'toast';
+  }, 3000);
+}
+
+
+/* =====================================================
+   API
+===================================================== */
+
+async function api(url, options = {}) {
+
+  const response = await fetch(url, {
+    credentials: 'same-origin',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {})
+    }
+  });
+
+  let data = null;
+
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok) {
+
+    if (response.status === 401) {
+      showLogin();
     }
 
-    function formatFC(value) {
-      return Number(value || 0).toLocaleString('fr-FR') + ' FC';
-    }
+    throw new Error(
+      data.error ||
+      `Erreur serveur (${response.status})`
+    );
+  }
 
-    function showToast(message, type = 'success') {
-      const container = $('#toastContainer');
-
-      const toast = document.createElement('div');
-
-      toast.className = `toast ${type}`;
-
-      toast.textContent = message;
-
-      container.appendChild(toast);
-
-      setTimeout(() => {
-        toast.remove();
-      }, 3500);
-    }
-
-    async function api(url, options = {}) {
-
-      const response = await fetch(url, {
-        ...options,
-        credentials: 'same-origin',
-
-        headers: {
-          'Content-Type': 'application/json',
-          ...(options.headers || {})
-        }
-      });
-
-      let data = {};
-
-      try {
-        data = await response.json();
-      } catch {
-        data = {};
-      }
-
-      if (response.status === 401) {
-        showLogin();
-
-        throw new Error(
-          data.error || 'Session administrateur expirée'
-        );
-      }
-
-      if (!response.ok) {
-        throw new Error(
-          data.error || 'Une erreur est survenue'
-        );
-      }
-
-      return data;
-    }
+  return data;
+}
 
 
-    // ==========================================================
-    // LOGIN
-    // ==========================================================
+/* =====================================================
+   LOGIN
+===================================================== */
 
-    function showLogin() {
-      $('#loginScreen').style.display = 'flex';
-      $('#app').classList.remove('is-visible');
+loginForm.addEventListener(
+  'submit',
+  async event => {
 
-      $('#loginPassword').value = '';
+    event.preventDefault();
 
-      setTimeout(() => {
-        $('#loginPassword').focus();
-      }, 100);
-    }
+    loginError.classList.add('hidden');
 
-    function showApp() {
-      $('#loginScreen').style.display = 'none';
-      $('#app').classList.add('is-visible');
-    }
+    const password =
+      document
+        .getElementById('password')
+        .value;
 
+    loginButton.disabled = true;
+    loginButton.textContent =
+      'Connexion...';
 
-    $('#loginForm').addEventListener('submit', async event => {
+    try {
 
-      event.preventDefault();
-
-      const password = $('#loginPassword').value.trim();
-
-      const error = $('#loginError');
-
-      error.textContent = '';
-
-      if (!password) {
-        error.textContent =
-          'Entre le mot de passe administrateur.';
-        return;
-      }
-
-      const button = $('#loginButton');
-
-      button.disabled = true;
-      button.textContent = 'Connexion...';
-
-      try {
-
-        await api('/api/admin/login', {
+      await api(
+        '/api/admin/login',
+        {
           method: 'POST',
-
           body: JSON.stringify({
             password
           })
-        });
-
-        showApp();
-
-        await loadProducts();
-
-        navigate('dashboard');
-
-      } catch (err) {
-
-        error.textContent =
-          err.message || 'Connexion impossible.';
-
-      } finally {
-
-        button.disabled = false;
-        button.textContent = 'Se connecter';
-
-      }
-
-    });
-
-
-    // ==========================================================
-    // SESSION AU CHARGEMENT
-    // ==========================================================
-
-    async function checkSession() {
-
-      try {
-
-        await api('/api/admin/session');
-
-        showApp();
-
-        await loadProducts();
-
-      } catch {
-
-        showLogin();
-
-      }
-
-    }
-
-
-    // ==========================================================
-    // CHARGEMENT PRODUITS
-    // ==========================================================
-
-    async function loadProducts() {
-
-      const data =
-        await api('/api/admin/products');
-
-      products = data.products;
-
-      updateStats();
-
-      renderEleve();
-      renderExterieur();
-
-    }
-
-
-    // ==========================================================
-    // STATISTIQUES
-    // ==========================================================
-
-    function updateStats() {
-
-      const eleveCount =
-        products.eleve?.length || 0;
-
-      const exterieurCount =
-        products.exterieur?.length || 0;
-
-      $('#statEleve').textContent =
-        eleveCount;
-
-      $('#statExterieur').textContent =
-        exterieurCount;
-
-      $('#statTotal').textContent =
-        eleveCount + exterieurCount;
-
-    }
-
-
-    // ==========================================================
-    // IMAGE FALLBACK
-    // ==========================================================
-
-    function imageError(img) {
-
-      img.style.display = 'none';
-
-      const fallback =
-        img.parentElement.querySelector(
-          '.product-image-fallback'
-        );
-
-      if (fallback) {
-        fallback.style.display = 'flex';
-      }
-
-    }
-
-
-    // ==========================================================
-    // RENDU INSTITUT
-    // ==========================================================
-
-    function renderEleve() {
-
-      const grid = $('#eleveGrid');
-
-      const query =
-        $('#searchEleve').value
-          .trim()
-          .toLowerCase();
-
-      const list =
-        products.eleve.filter(product =>
-          product.name
-            .toLowerCase()
-            .includes(query)
-        );
-
-      if (!list.length) {
-
-        grid.innerHTML = `
-          <div class="empty">
-            Aucun produit trouvé.
-          </div>
-        `;
-
-        return;
-      }
-
-      grid.innerHTML =
-        list.map(product => {
-
-          const image =
-            escapeHtml(product.image);
-
-          const name =
-            escapeHtml(product.name);
-
-          return `
-            <article class="product-card">
-
-              <div class="product-image-wrap">
-
-                <img
-                  src="${image}"
-                  alt="${name}"
-                  class="product-image"
-                  onerror="imageError(this)"
-                >
-
-                <div
-                  class="product-image-fallback"
-                  style="display:none"
-                >
-                  🌮
-                </div>
-
-              </div>
-
-              <div class="product-body">
-
-                <div class="product-name">
-                  ${name}
-                </div>
-
-                <div class="product-price">
-                  ${formatFC(product.price)}
-                </div>
-
-                <div class="product-actions">
-
-                  <button
-                    class="btn btn-secondary btn-small"
-                    onclick="openEdit('eleve', '${escapeHtml(product.id)}')"
-                  >
-                    Modifier
-                  </button>
-
-                  <button
-                    class="btn btn-danger btn-small"
-                    onclick="deleteProduct('eleve', '${escapeHtml(product.id)}')"
-                  >
-                    Supprimer
-                  </button>
-
-                </div>
-
-              </div>
-
-            </article>
-          `;
-
-        }).join('');
-
-    }
-
-
-    // ==========================================================
-    // RENDU EXTÉRIEUR
-    // ==========================================================
-
-    function renderExterieur() {
-
-      const grid =
-        $('#exterieurGrid');
-
-      const query =
-        $('#searchExterieur').value
-          .trim()
-          .toLowerCase();
-
-      const list =
-        products.exterieur.filter(product =>
-          product.name
-            .toLowerCase()
-            .includes(query)
-        );
-
-      if (!list.length) {
-
-        grid.innerHTML = `
-          <div class="empty">
-            Aucun produit trouvé.
-          </div>
-        `;
-
-        return;
-      }
-
-      grid.innerHTML =
-        list.map(product => {
-
-          const image =
-            escapeHtml(product.image);
-
-          const name =
-            escapeHtml(product.name);
-
-          const l =
-            product.variants?.find(
-              variant => variant.size === 'L'
-            );
-
-          const xl =
-            product.variants?.find(
-              variant => variant.size === 'XL'
-            );
-
-          return `
-            <article class="product-card">
-
-              <div class="product-image-wrap">
-
-                <img
-                  src="${image}"
-                  alt="${name}"
-                  class="product-image"
-                  onerror="imageError(this)"
-                >
-
-                <div
-                  class="product-image-fallback"
-                  style="display:none"
-                >
-                  🌮
-                </div>
-
-              </div>
-
-              <div class="product-body">
-
-                <div class="product-name">
-                  ${name}
-                </div>
-
-                <div class="product-price">
-                  L : ${formatFC(l?.price || 0)}
-                </div>
-
-                <div class="variant-price">
-                  XL : ${formatFC(xl?.price || 0)}
-                </div>
-
-                <div class="product-actions">
-
-                  <button
-                    class="btn btn-secondary btn-small"
-                    onclick="openEdit('exterieur', '${escapeHtml(product.id)}')"
-                  >
-                    Modifier
-                  </button>
-
-                  <button
-                    class="btn btn-danger btn-small"
-                    onclick="deleteProduct('exterieur', '${escapeHtml(product.id)}')"
-                  >
-                    Supprimer
-                  </button>
-
-                </div>
-
-              </div>
-
-            </article>
-          `;
-
-        }).join('');
-
-    }
-
-
-    // ==========================================================
-    // NAVIGATION
-    // ==========================================================
-
-    function navigate(page) {
+        }
+      );
 
       document
-        .querySelectorAll('.page')
-        .forEach(element => {
-          element.classList.remove('active');
-        });
+        .getElementById('password')
+        .value = '';
 
-      const target =
-        $(`#page-${page}`);
+      await showApp();
 
-      if (target) {
-        target.classList.add('active');
-      }
+    } catch (error) {
 
-      document
-        .querySelectorAll('[data-page]')
-        .forEach(button => {
-          button.classList.toggle(
-            'active',
-            button.dataset.page === page
-          );
-        });
+      loginError.textContent =
+        error.message;
 
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      loginError.classList.remove(
+        'hidden'
+      );
 
+    } finally {
+
+      loginButton.disabled = false;
+
+      loginButton.textContent =
+        'Se connecter';
     }
+  }
+);
 
+
+/* =====================================================
+   SESSION
+===================================================== */
+
+async function checkSession() {
+
+  try {
+
+    await api(
+      '/api/admin/session'
+    );
+
+    await showApp();
+
+  } catch {
+    showLogin();
+  }
+}
+
+
+function showLogin() {
+
+  loginScreen.style.display =
+    'flex';
+
+  app.classList.remove(
+    'visible'
+  );
+}
+
+
+async function showApp() {
+
+  loginScreen.style.display =
+    'none';
+
+  app.classList.add(
+    'visible'
+  );
+
+  await loadProducts();
+}
+
+
+/* =====================================================
+   CHARGER PRODUITS
+===================================================== */
+
+async function loadProducts() {
+
+  renderLoading();
+
+  try {
+
+    const data =
+      await api(
+        '/api/admin/products'
+      );
+
+    products =
+      data.products || products;
+
+    renderAll();
+
+  } catch (error) {
+
+    showToast(
+      error.message,
+      'error'
+    );
+
+    renderError(
+      error.message
+    );
+  }
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+function renderLoading() {
+
+  [
+    'dashboardProducts',
+    'eleveProducts',
+    'exterieurProducts'
+  ].forEach(id => {
+
+    const element =
+      document.getElementById(id);
+
+    if (!element) return;
+
+    element.innerHTML = `
+      <div class="loading">
+        <div class="spinner"></div>
+        Chargement...
+      </div>
+    `;
+  });
+}
+
+
+function renderError(message) {
+
+  [
+    'dashboardProducts',
+    'eleveProducts',
+    'exterieurProducts'
+  ].forEach(id => {
+
+    const element =
+      document.getElementById(id);
+
+    if (!element) return;
+
+    element.innerHTML = `
+      <div class="empty">
+        ${escapeHtml(message)}
+      </div>
+    `;
+  });
+}
+
+
+/* =====================================================
+   RENDER
+===================================================== */
+
+function renderAll() {
+
+  updateStats();
+
+  renderCategory(
+    'eleve',
+    'eleveProducts'
+  );
+
+  renderCategory(
+    'exterieur',
+    'exterieurProducts'
+  );
+
+  renderDashboard();
+}
+
+
+function updateStats() {
+
+  const eleve =
+    Array.isArray(products.eleve)
+      ? products.eleve.length
+      : 0;
+
+  const exterieur =
+    Array.isArray(products.exterieur)
+      ? products.exterieur.length
+      : 0;
+
+  document
+    .getElementById('statEleve')
+    .textContent = eleve;
+
+  document
+    .getElementById('statExterieur')
+    .textContent = exterieur;
+
+  document
+    .getElementById('statTotal')
+    .textContent =
+      eleve + exterieur;
+}
+
+
+function renderDashboard() {
+
+  const container =
+    document.getElementById(
+      'dashboardProducts'
+    );
+
+  const all = [
+    ...(products.eleve || []).map(
+      p => ({
+        ...p,
+        category: 'eleve'
+      })
+    ),
+
+    ...(products.exterieur || []).map(
+      p => ({
+        ...p,
+        category: 'exterieur'
+      })
+    )
+  ];
+
+  if (!all.length) {
+
+    container.innerHTML = `
+      <div class="empty">
+        Aucun produit.
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML =
+    all.map(
+      productCard
+    ).join('');
+}
+
+
+function renderCategory(
+  category,
+  containerId
+) {
+
+  const container =
+    document.getElementById(
+      containerId
+    );
+
+  const list =
+    Array.isArray(products[category])
+      ? products[category]
+      : [];
+
+  if (!list.length) {
+
+    container.innerHTML = `
+      <div class="empty">
+        Aucun produit dans cette catégorie.
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML =
+    list.map(
+      product =>
+        productCard({
+          ...product,
+          category
+        })
+    ).join('');
+}
+
+
+/* =====================================================
+   CARTE PRODUIT
+===================================================== */
+
+function productCard(product) {
+
+  const image =
+    product.image
+      ? product.image
+      : '';
+
+  let priceHtml = '';
+
+  if (
+    product.category ===
+    'eleve'
+  ) {
+
+    priceHtml =
+      `${formatFC(product.price)}`;
+
+  } else {
+
+    const variants =
+      Array.isArray(
+        product.variants
+      )
+        ? product.variants
+        : [];
+
+    const L =
+      variants.find(
+        v => v.size === 'L'
+      );
+
+    const XL =
+      variants.find(
+        v => v.size === 'XL'
+      );
+
+    priceHtml = `
+      ${L ? `L : ${formatFC(L.price)}` : ''}
+      ${L && XL ? ' • ' : ''}
+      ${XL ? `XL : ${formatFC(XL.price)}` : ''}
+    `;
+  }
+
+  return `
+    <article class="product-card">
+
+      <img
+        class="product-image"
+        src="${escapeAttr(image)}"
+        alt="${escapeAttr(product.name)}"
+        loading="lazy"
+        onerror="this.src='';this.style.background='#eee'"
+      >
+
+      <div class="product-content">
+
+        <div class="product-name">
+          ${escapeHtml(product.name)}
+        </div>
+
+        <div class="product-price">
+          ${priceHtml}
+        </div>
+
+        <div class="product-actions">
+
+          <button
+            class="btn btn-secondary"
+            type="button"
+            onclick="editProduct('${product.category}','${escapeJs(product.id)}')"
+          >
+            ✏️ Modifier
+          </button>
+
+          <button
+            class="btn btn-danger"
+            type="button"
+            onclick="deleteProduct('${product.category}','${escapeJs(product.id)}')"
+          >
+            🗑️ Supprimer
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+  `;
+}
+
+
+/* =====================================================
+   AJOUT
+===================================================== */
+
+window.openAddModal =
+  function(category) {
+
+    editingProduct = null;
+
+    productForm.reset();
 
     document
-      .querySelectorAll('[data-page]')
-      .forEach(button => {
-
-        button.addEventListener('click', () => {
-          navigate(button.dataset.page);
-        });
-
-      });
-
+      .getElementById(
+        'productId'
+      )
+      .value = '';
 
     document
-      .querySelectorAll('[data-go]')
-      .forEach(button => {
+      .getElementById(
+        'productCategory'
+      )
+      .value = category;
 
-        button.addEventListener('click', () => {
-          navigate(button.dataset.go);
-        });
+    document
+      .getElementById(
+        'modalTitle'
+      )
+      .textContent =
+        'Ajouter un produit';
 
-      });
-
-
-    // ==========================================================
-    // RECHERCHE
-    // ==========================================================
-
-    $('#searchEleve')
-      .addEventListener('input', renderEleve);
-
-    $('#searchExterieur')
-      .addEventListener('input', renderExterieur);
-
-
-    // ==========================================================
-    // MODAL
-    // ==========================================================
-
-    function openAdd(category) {
-
-      editingId = null;
-      editingCategory = category;
-
-      $('#modalTitle').textContent =
+    document
+      .getElementById(
+        'modalCategory'
+      )
+      .textContent =
         category === 'eleve'
-          ? 'Ajouter un produit — Institut Bobokoli'
-          : 'Ajouter un produit — Extérieur / Livraison';
+          ? 'Institut Bobokoli'
+          : 'Livraison / Extérieur';
 
-      $('#productId').value = '';
+    setupCategoryFields(
+      category
+    );
 
-      $('#productCategory').value =
-        category;
+    imagePreview.style.display =
+      'none';
 
-      $('#productName').value = '';
-      $('#productImage').value = '';
+    imagePreview.removeAttribute(
+      'src'
+    );
 
-      $('#productPrice').value = '';
-      $('#productPriceL').value = '';
-      $('#productPriceXL').value = '';
+    currentImageText.textContent =
+      'Aucune photo sélectionnée.';
 
-      $('#formMessage').textContent = '';
+    productModal.classList.add(
+      'open'
+    );
+  };
 
-      if (category === 'eleve') {
 
-        $('#elevePriceGroup').style.display =
-          'block';
+/* =====================================================
+   MODIFICATION
+===================================================== */
 
-        $('#exterieurPriceGroup').style.display =
-          'none';
+window.editProduct =
+  function(category, id) {
 
-      } else {
+    const product =
+      (products[category] || [])
+        .find(
+          p => p.id === id
+        );
 
-        $('#elevePriceGroup').style.display =
-          'none';
+    if (!product) {
+      showToast(
+        'Produit introuvable.',
+        'error'
+      );
 
-        $('#exterieurPriceGroup').style.display =
-          'block';
-
-      }
-
-      updateImagePreview();
-
-      $('#modalBackdrop')
-        .classList.add('visible');
-
-      setTimeout(() => {
-        $('#productName').focus();
-      }, 100);
-
+      return;
     }
 
+    editingProduct = product;
 
-    function openEdit(category, id) {
+    document
+      .getElementById(
+        'productId'
+      )
+      .value = product.id;
 
-      const product =
-        products[category]
-          .find(item => item.id === id);
+    document
+      .getElementById(
+        'productCategory'
+      )
+      .value = category;
 
-      if (!product) {
+    document
+      .getElementById(
+        'productName'
+      )
+      .value = product.name || '';
+
+    document
+      .getElementById(
+        'modalTitle'
+      )
+      .textContent =
+        'Modifier le produit';
+
+    document
+      .getElementById(
+        'modalCategory'
+      )
+      .textContent =
+        category === 'eleve'
+          ? 'Institut Bobokoli'
+          : 'Livraison / Extérieur';
+
+    setupCategoryFields(
+      category
+    );
+
+    if (category === 'eleve') {
+
+      document
+        .getElementById(
+          'productPrice'
+        )
+        .value =
+          product.price ?? '';
+
+    } else {
+
+      const variants =
+        product.variants || [];
+
+      const L =
+        variants.find(
+          v => v.size === 'L'
+        );
+
+      const XL =
+        variants.find(
+          v => v.size === 'XL'
+        );
+
+      document
+        .getElementById(
+          'productPriceL'
+        )
+        .value =
+          L ? L.price : '';
+
+      document
+        .getElementById(
+          'productPriceXL'
+        )
+        .value =
+          XL ? XL.price : '';
+    }
+
+    productImage.value = '';
+
+    imagePreview.style.display =
+      'none';
+
+    imagePreview.removeAttribute(
+      'src'
+    );
+
+    if (product.image) {
+
+      currentImageText.innerHTML =
+        `Photo actuelle : <strong>${escapeHtml(product.image)}</strong><br>Choisis une nouvelle photo seulement si tu veux la remplacer.`;
+
+    } else {
+
+      currentImageText.textContent =
+        'Aucune photo actuelle.';
+    }
+
+    productModal.classList.add(
+      'open'
+    );
+  };
+
+
+/* =====================================================
+   CHAMPS CATEGORIE
+===================================================== */
+
+function setupCategoryFields(
+  category
+) {
+
+  const simple =
+    document.getElementById(
+      'simplePriceField'
+    );
+
+  const variants =
+    document.getElementById(
+      'variantPriceFields'
+    );
+
+  if (category === 'eleve') {
+
+    simple.classList.remove(
+      'hidden'
+    );
+
+    variants.classList.add(
+      'hidden'
+    );
+
+    document
+      .getElementById(
+        'productPrice'
+      )
+      .required = true;
+
+    document
+      .getElementById(
+        'productPriceL'
+      )
+      .required = false;
+
+    document
+      .getElementById(
+        'productPriceXL'
+      )
+      .required = false;
+
+  } else {
+
+    simple.classList.add(
+      'hidden'
+    );
+
+    variants.classList.remove(
+      'hidden'
+    );
+
+    document
+      .getElementById(
+        'productPrice'
+      )
+      .required = false;
+
+    document
+      .getElementById(
+        'productPriceL'
+      )
+      .required = true;
+
+    document
+      .getElementById(
+        'productPriceXL'
+      )
+      .required = true;
+  }
+}
+
+
+/* =====================================================
+   IMAGE — COMPRESSION
+===================================================== */
+
+productImage.addEventListener(
+  'change',
+  async () => {
+
+    const file =
+      productImage.files &&
+      productImage.files[0];
+
+    if (!file) return;
+
+    if (
+      !file.type.startsWith(
+        'image/'
+      )
+    ) {
+
+      showToast(
+        'Choisis une vraie image.',
+        'error'
+      );
+
+      productImage.value = '';
+
+      return;
+    }
+
+    try {
+
+      const compressed =
+        await compressImage(file);
+
+      imagePreview.src =
+        compressed.dataUrl;
+
+      imagePreview.style.display =
+        'block';
+
+      currentImageText.textContent =
+        `Nouvelle photo sélectionnée (${Math.round(compressed.size / 1024)} Ko).`;
+
+      productImage.dataset.base64 =
+        compressed.dataUrl;
+
+      productImage.dataset.mime =
+        compressed.mimeType;
+
+    } catch (error) {
+
+      console.error(error);
+
+      showToast(
+        'Impossible de préparer cette image.',
+        'error'
+      );
+    }
+  }
+);
+
+
+function compressImage(file) {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        event => {
+
+          const img =
+            new Image();
+
+          img.onload =
+            () => {
+
+              const maxWidth = 1200;
+              const maxHeight = 1200;
+
+              let width =
+                img.width;
+
+              let height =
+                img.height;
+
+              const ratio =
+                Math.min(
+                  maxWidth / width,
+                  maxHeight / height,
+                  1
+                );
+
+              width =
+                Math.round(
+                  width * ratio
+                );
+
+              height =
+                Math.round(
+                  height * ratio
+                );
+
+              const canvas =
+                document.createElement(
+                  'canvas'
+                );
+
+              canvas.width =
+                width;
+
+              canvas.height =
+                height;
+
+              const ctx =
+                canvas.getContext(
+                  '2d'
+                );
+
+              ctx.drawImage(
+                img,
+                0,
+                0,
+                width,
+                height
+              );
+
+              const dataUrl =
+                canvas.toDataURL(
+                  'image/jpeg',
+                  .78
+                );
+
+              const base64 =
+                dataUrl.split(',')[1];
+
+              const size =
+                Math.ceil(
+                  base64.length * .75
+                );
+
+              resolve({
+                dataUrl,
+                mimeType:
+                  'image/jpeg',
+                size
+              });
+            };
+
+          img.onerror =
+            () =>
+              reject(
+                new Error(
+                  'Image invalide'
+                )
+              );
+
+          img.src =
+            event.target.result;
+        };
+
+      reader.onerror =
+        () =>
+          reject(
+            new Error(
+              'Lecture impossible'
+            )
+          );
+
+      reader.readAsDataURL(
+        file
+      );
+    }
+  );
+}
+
+
+/* =====================================================
+   SAUVEGARDER
+===================================================== */
+
+productForm.addEventListener(
+  'submit',
+  async event => {
+
+    event.preventDefault();
+
+    const category =
+      document
+        .getElementById(
+          'productCategory'
+        )
+        .value;
+
+    const id =
+      document
+        .getElementById(
+          'productId'
+        )
+        .value;
+
+    const name =
+      document
+        .getElementById(
+          'productName'
+        )
+        .value
+        .trim();
+
+    if (!name) {
+
+      showToast(
+        'Le nom est obligatoire.',
+        'error'
+      );
+
+      return;
+    }
+
+    const imageData =
+      productImage.dataset.base64 ||
+      '';
+
+    const imageMimeType =
+      productImage.dataset.mime ||
+      '';
+
+    const payload = {
+      name,
+      imageData,
+      imageMimeType
+    };
+
+    if (category === 'eleve') {
+
+      payload.price =
+        Number(
+          document
+            .getElementById(
+              'productPrice'
+            )
+            .value
+        );
+
+      if (
+        !Number.isFinite(
+          payload.price
+        )
+      ) {
 
         showToast(
-          'Produit introuvable.',
+          'Prix invalide.',
           'error'
         );
 
         return;
       }
 
-      editingId = id;
-      editingCategory = category;
+    } else {
 
-      $('#modalTitle').textContent =
-        'Modifier le produit';
+      payload.priceL =
+        Number(
+          document
+            .getElementById(
+              'productPriceL'
+            )
+            .value
+        );
 
-      $('#productId').value = id;
-
-      $('#productCategory').value =
-        category;
-
-      $('#productName').value =
-        product.name || '';
-
-      $('#productImage').value =
-        product.image || '';
-
-      if (category === 'eleve') {
-
-        $('#elevePriceGroup').style.display =
-          'block';
-
-        $('#exterieurPriceGroup').style.display =
-          'none';
-
-        $('#productPrice').value =
-          product.price ?? '';
-
-      } else {
-
-        $('#elevePriceGroup').style.display =
-          'none';
-
-        $('#exterieurPriceGroup').style.display =
-          'block';
-
-        const l =
-          product.variants?.find(
-            variant => variant.size === 'L'
-          );
-
-        const xl =
-          product.variants?.find(
-            variant => variant.size === 'XL'
-          );
-
-        $('#productPriceL').value =
-          l?.price ?? '';
-
-        $('#productPriceXL').value =
-          xl?.price ?? '';
-
-      }
-
-      $('#formMessage').textContent = '';
-
-      updateImagePreview();
-
-      $('#modalBackdrop')
-        .classList.add('visible');
-
-    }
-
-
-    function closeModal() {
-
-      $('#modalBackdrop')
-        .classList.remove('visible');
-
-      editingId = null;
-      editingCategory = null;
-
-    }
-
-
-    $('#closeModal')
-      .addEventListener('click', closeModal);
-
-    $('#cancelModal')
-      .addEventListener('click', closeModal);
-
-
-    $('#modalBackdrop')
-      .addEventListener('click', event => {
-
-        if (
-          event.target ===
-          $('#modalBackdrop')
-        ) {
-          closeModal();
-        }
-
-      });
-
-
-    document.addEventListener('keydown', event => {
+      payload.priceXL =
+        Number(
+          document
+            .getElementById(
+              'productPriceXL'
+            )
+            .value
+        );
 
       if (
-        event.key === 'Escape' &&
-        $('#modalBackdrop')
-          .classList.contains('visible')
+        !Number.isFinite(
+          payload.priceL
+        ) ||
+        !Number.isFinite(
+          payload.priceXL
+        )
       ) {
-        closeModal();
-      }
 
-    });
-
-
-    // ==========================================================
-    // APERÇU IMAGE
-    // ==========================================================
-
-    function updateImagePreview() {
-
-      const url =
-        $('#productImage').value.trim();
-
-      const preview =
-        $('#imagePreview');
-
-      if (!url) {
-
-        preview.innerHTML = `
-          <div class="product-image-fallback">
-            🌮
-          </div>
-        `;
+        showToast(
+          'Les prix L et XL sont obligatoires.',
+          'error'
+        );
 
         return;
       }
-
-      preview.innerHTML = `
-        <img
-          src="${escapeHtml(url)}"
-          alt="Aperçu"
-          onerror="
-            this.style.display='none';
-            this.nextElementSibling.style.display='flex';
-          "
-        >
-
-        <div
-          class="product-image-fallback"
-          style="display:none"
-        >
-          🌮
-        </div>
-      `;
-
     }
 
+    // Si modification sans nouvelle photo
+    if (
+      editingProduct &&
+      !imageData
+    ) {
 
-    $('#productImage')
-      .addEventListener(
-        'input',
-        updateImagePreview
-      );
+      payload.image =
+        editingProduct.image;
+    }
 
+    saveButton.disabled = true;
 
-    // ==========================================================
-    // ENREGISTREMENT
-    // ==========================================================
+    saveButton.textContent =
+      imageData
+        ? 'Envoi de la photo...'
+        : 'Enregistrement...';
 
-    $('#productForm')
-      .addEventListener('submit', async event => {
+    try {
 
-        event.preventDefault();
+      let result;
 
-        const category =
-          $('#productCategory').value;
+      if (editingProduct) {
 
-        const name =
-          $('#productName').value.trim();
-
-        const image =
-          $('#productImage').value.trim();
-
-        const message =
-          $('#formMessage');
-
-        message.textContent = '';
-
-        if (!name) {
-
-          message.textContent =
-            'Le nom est obligatoire.';
-
-          return;
-        }
-
-        if (!image) {
-
-          message.textContent =
-            'L’image est obligatoire.';
-
-          return;
-        }
-
-        let payload;
-
-        if (category === 'eleve') {
-
-          const price =
-            Number($('#productPrice').value);
-
-          if (!Number.isFinite(price) || price < 0) {
-
-            message.textContent =
-              'Entre un prix valide.';
-
-            return;
-          }
-
-          payload = {
-            name,
-            price,
-            image
-          };
-
-        } else {
-
-          const priceL =
-            Number($('#productPriceL').value);
-
-          const priceXL =
-            Number($('#productPriceXL').value);
-
-          if (
-            !Number.isFinite(priceL) ||
-            priceL < 0
-          ) {
-
-            message.textContent =
-              'Entre un prix L valide.';
-
-            return;
-          }
-
-          if (
-            !Number.isFinite(priceXL) ||
-            priceXL < 0
-          ) {
-
-            message.textContent =
-              'Entre un prix XL valide.';
-
-            return;
-          }
-
-          payload = {
-            name,
-            image,
-            priceL,
-            priceXL
-          };
-
-        }
-
-        const saveButton =
-          $('#saveProduct');
-
-        saveButton.disabled = true;
-
-        saveButton.textContent =
-          'Enregistrement...';
-
-        try {
-
-          let data;
-
-          if (editingId) {
-
-            data = await api(
-              `/api/admin/products/${category}/${encodeURIComponent(editingId)}`,
-              {
-                method: 'PUT',
-                body: JSON.stringify(payload)
-              }
-            );
-
-            showToast(
-              'Produit modifié avec succès.'
-            );
-
-          } else {
-
-            data = await api(
-              `/api/admin/products/${category}`,
-              {
-                method: 'POST',
-                body: JSON.stringify(payload)
-              }
-            );
-
-            showToast(
-              'Produit ajouté avec succès.'
-            );
-
-          }
-
-          products =
-            data.products;
-
-          updateStats();
-
-          renderEleve();
-          renderExterieur();
-
-          closeModal();
-
-          navigate(category);
-
-        } catch (error) {
-
-          message.textContent =
-            error.message ||
-            'Impossible d’enregistrer le produit.';
-
-        } finally {
-
-          saveButton.disabled = false;
-
-          saveButton.textContent =
-            'Enregistrer';
-
-        }
-
-      });
-
-
-    // ==========================================================
-    // SUPPRESSION
-    // ==========================================================
-
-    async function deleteProduct(category, id) {
-
-      const product =
-        products[category]
-          .find(item => item.id === id);
-
-      if (!product) return;
-
-      const confirmed =
-        window.confirm(
-          `Voulez-vous vraiment supprimer "${product.name}" ?`
-        );
-
-      if (!confirmed) return;
-
-      try {
-
-        const data =
+        result =
           await api(
             `/api/admin/products/${category}/${encodeURIComponent(id)}`,
             {
-              method: 'DELETE'
+              method: 'PUT',
+              body:
+                JSON.stringify(
+                  payload
+                )
             }
           );
 
-        products =
-          data.products;
+      } else {
 
-        updateStats();
-
-        renderEleve();
-        renderExterieur();
-
-        showToast(
-          'Produit supprimé avec succès.'
-        );
-
-      } catch (error) {
-
-        showToast(
-          error.message ||
-          'Impossible de supprimer le produit.',
-          'error'
-        );
-
+        result =
+          await api(
+            `/api/admin/products/${category}`,
+            {
+              method: 'POST',
+              body:
+                JSON.stringify(
+                  payload
+                )
+            }
+          );
       }
 
-    }
+      products =
+        result.products;
 
+      closeModal();
 
-    // ==========================================================
-    // BOUTONS AJOUT
-    // ==========================================================
+      renderAll();
 
-    document
-      .querySelectorAll('[data-add-category]')
-      .forEach(button => {
-
-        button.addEventListener('click', () => {
-
-          openAdd(
-            button.dataset.addCategory
-          );
-
-        });
-
-      });
-
-
-    // ==========================================================
-    // VOIR LE SITE
-    // ==========================================================
-
-    function viewSite() {
-
-      window.open(
-        '/',
-        '_blank',
-        'noopener,noreferrer'
+      showToast(
+        result.message ||
+        'Produit enregistré.'
       );
 
+    } catch (error) {
+
+      console.error(error);
+
+      showToast(
+        error.message,
+        'error'
+      );
+
+    } finally {
+
+      saveButton.disabled =
+        false;
+
+      saveButton.textContent =
+        'Enregistrer';
     }
-
-    $('#viewSiteDesktop')
-      .addEventListener('click', viewSite);
-
-    $('#viewSiteTop')
-      .addEventListener('click', viewSite);
+  }
+);
 
 
-    // ==========================================================
-    // LOGOUT
-    // ==========================================================
+/* =====================================================
+   SUPPRIMER
+===================================================== */
 
-    async function logout() {
+window.deleteProduct =
+  async function(category, id) {
+
+    const product =
+      (products[category] || [])
+        .find(
+          p => p.id === id
+        );
+
+    if (!product) return;
+
+    const confirmed =
+      confirm(
+        `Supprimer "${product.name}" ?\n\nCette action retirera le produit du menu.`
+      );
+
+    if (!confirmed) return;
+
+    try {
+
+      const result =
+        await api(
+          `/api/admin/products/${category}/${encodeURIComponent(id)}`,
+          {
+            method: 'DELETE'
+          }
+        );
+
+      products =
+        result.products;
+
+      renderAll();
+
+      showToast(
+        'Produit supprimé.'
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      showToast(
+        error.message,
+        'error'
+      );
+    }
+  };
+
+
+/* =====================================================
+   FERMER MODAL
+===================================================== */
+
+function closeModal() {
+
+  productModal.classList.remove(
+    'open'
+  );
+
+  editingProduct = null;
+
+  productForm.reset();
+
+  productImage.dataset.base64 =
+    '';
+
+  productImage.dataset.mime =
+    '';
+
+  imagePreview.style.display =
+    'none';
+
+  imagePreview.removeAttribute(
+    'src'
+  );
+}
+
+document
+  .getElementById(
+    'closeModalButton'
+  )
+  .addEventListener(
+    'click',
+    closeModal
+  );
+
+document
+  .getElementById(
+    'cancelButton'
+  )
+  .addEventListener(
+    'click',
+    closeModal
+  );
+
+productModal.addEventListener(
+  'click',
+  event => {
+
+    if (
+      event.target ===
+      productModal
+    ) {
+      closeModal();
+    }
+  }
+);
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function changePage(page) {
+
+  document
+    .querySelectorAll('.page')
+    .forEach(element => {
+
+      element.classList.toggle(
+        'active',
+        element.id ===
+          `page-${page}`
+      );
+    });
+
+  document
+    .querySelectorAll(
+      '.nav-btn, .mobile-nav-btn'
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        'active',
+        button.dataset.page ===
+          page
+      );
+    });
+
+  const titles = {
+    dashboard: [
+      'Dashboard',
+      'Gestion du catalogue Malé Tacos'
+    ],
+
+    eleve: [
+      'Institut Bobokoli',
+      'Produits pour les élèves'
+    ],
+
+    exterieur: [
+      'Livraison / Extérieur',
+      'Produits disponibles à la livraison'
+    ]
+  };
+
+  document
+    .getElementById(
+      'pageTitle'
+    )
+    .textContent =
+      titles[page][0];
+
+  document
+    .getElementById(
+      'pageSubtitle'
+    )
+    .textContent =
+      titles[page][1];
+
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
+document
+  .querySelectorAll(
+    '.nav-btn, .mobile-nav-btn'
+  )
+  .forEach(button => {
+
+    button.addEventListener(
+      'click',
+      () => {
+        changePage(
+          button.dataset.page
+        );
+      }
+    );
+  });
+
+
+/* =====================================================
+   ACTUALISER
+===================================================== */
+
+document
+  .getElementById(
+    'refreshButton'
+  )
+  .addEventListener(
+    'click',
+    async () => {
+
+      showToast(
+        'Actualisation...'
+      );
+
+      await loadProducts();
+    }
+  );
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+document
+  .getElementById(
+    'logoutButton'
+  )
+  .addEventListener(
+    'click',
+    async () => {
 
       try {
 
@@ -2906,28 +3008,90 @@
           }
         );
 
-      } catch {
-        // On déconnecte quand même l'interface.
-      }
+      } catch {}
 
       showLogin();
 
+      showToast(
+        'Déconnexion réussie.'
+      );
     }
-
-    $('#logoutDesktop')
-      .addEventListener('click', logout);
-
-    $('#mobileLogout')
-      .addEventListener('click', logout);
+  );
 
 
-    // ==========================================================
-    // START
-    // ==========================================================
+/* =====================================================
+   UTILITAIRES
+===================================================== */
 
-    checkSession();
+function formatFC(amount) {
 
-  </script>
+  return Number(
+    amount || 0
+  ).toLocaleString(
+    'fr-FR'
+  ) + ' FC';
+}
+
+
+function escapeHtml(value) {
+
+  return String(
+    value ?? ''
+  )
+    .replace(
+      /&/g,
+      '&amp;'
+    )
+    .replace(
+      /</g,
+      '&lt;'
+    )
+    .replace(
+      />/g,
+      '&gt;'
+    )
+    .replace(
+      /"/g,
+      '&quot;'
+    )
+    .replace(
+      /'/g,
+      '&#039;'
+    );
+}
+
+
+function escapeAttr(value) {
+
+  return escapeHtml(
+    value
+  );
+}
+
+
+function escapeJs(value) {
+
+  return String(
+    value ?? ''
+  )
+    .replace(
+      /\\/g,
+      '\\\\'
+    )
+    .replace(
+      /'/g,
+      "\\'"
+    );
+}
+
+
+/* =====================================================
+   DÉMARRAGE
+===================================================== */
+
+checkSession();
+
+</script>
 
 </body>
 </html>
