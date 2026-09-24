@@ -981,6 +981,27 @@ app.delete(
 
 /*
 |--------------------------------------------------------------------------
+| IMAGES : SECOURS SI ABSENTE SUR RENDER
+|--------------------------------------------------------------------------
+*/
+
+/*
+ * Une photo ajoutée depuis l'admin est envoyée sur GitHub,
+ * mais elle n'existe sur Render qu'après le prochain déploiement.
+ * En attendant, on la charge directement depuis GitHub.
+ */
+
+app.get(/^\/([a-zA-Z0-9._-]+\.(?:jpg|jpeg|png|webp))$/, (req, res) => {
+  const fileName = req.params[0];
+
+  res.redirect(
+    302,
+    `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${encodeURIComponent(fileName)}`
+  );
+});
+
+/*
+|--------------------------------------------------------------------------
 | ADMIN.HTML
 |--------------------------------------------------------------------------
 */
