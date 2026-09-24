@@ -23,6 +23,12 @@
       "name": "Djo-burger",
       "price": 3000,
       "image": "burger.jpg"
+    },
+    {
+      "id": "zzzz-1790257172592",
+      "name": "ZZZZ",
+      "price": 1000,
+      "image": "zzzz-1790257171591.jpg"
     }
   ],
   "exterieur": [
